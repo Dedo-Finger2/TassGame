@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->integer('level')->nullable(false)->default(0);
+            $table->float('exp')->nullable(false)->default(0);
+            $table->float('exp_next_level')->nullable(false)->default(50);
+            $table->decimal('coins', 10, 2)
+                ->nullable(false)
+                ->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
