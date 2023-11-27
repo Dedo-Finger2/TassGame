@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
 
 // Auth
 Route::get('/login', [LoginController::class, 'login'])->name('login');
@@ -27,3 +23,7 @@ Route::post('/register', [LoginController::class, 'store'])->name('register.stor
 Route::post('/register', [LoginController::class, 'store'])->name('register.store');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Home
+Route::get('/', function () {
+    return view('welcome');
+})->name('home')->middleware('auth');
