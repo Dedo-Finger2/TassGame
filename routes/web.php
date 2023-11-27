@@ -27,11 +27,13 @@ Route::post('/register', [LoginController::class, 'store'])->name('register.stor
 Route::post('/register', [LoginController::class, 'store'])->name('register.store');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
 // Home
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 })->name('home')->middleware('auth');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
+
 
 // Urgences
 Route::get('/urgences', [UrgenceController::class, 'index'])->name('urgences.index')->middleware('auth');
@@ -42,6 +44,7 @@ Route::put('/urgences/{urgence}', [UrgenceController::class, 'update'])->name('u
 Route::get('/urgences/{urgence}/view', [UrgenceController::class, 'show'])->name('urgences.show')->middleware('auth');
 Route::delete('/urgences/{urgence}', [UrgenceController::class, 'destroy'])->name('urgences.destroy')->middleware('auth');
 
+
 // Importances
 Route::get('/importances', [ImportanceController::class, 'index'])->name('importances.index')->middleware('auth');
 Route::get('/importances-creation', [ImportanceController::class, 'create'])->name('importances.create')->middleware('auth');
@@ -50,6 +53,7 @@ Route::get('/importances/{importance}', [ImportanceController::class, 'edit'])->
 Route::put('/importances/{importance}', [ImportanceController::class, 'update'])->name('importances.update')->middleware('auth');
 Route::get('/importances/{importance}/view', [ImportanceController::class, 'show'])->name('importances.show')->middleware('auth');
 Route::delete('/importances/{importance}', [ImportanceController::class, 'destroy'])->name('importances.destroy')->middleware('auth');
+
 
 // Difficulties
 Route::get('/difficulties', [DifficultyController::class, 'index'])->name('difficulties.index')->middleware('auth');
