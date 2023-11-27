@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,6 +20,7 @@ return new class extends Migration
             $table->string('name')->nullable(false);
             $table->string('description')->nullable(false);
             $table->decimal('coins', 10, 2)->nullable(false);
+            $table->boolean('recurring')->default(false);
             $table->float('exp')->nullable(false);
             $table->dateTime('completed_at')->nullable(true);
             $table->timestamps();
