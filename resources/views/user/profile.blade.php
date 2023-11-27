@@ -11,6 +11,7 @@
         <li>Level: {{ $user->level }}🌳</li>
         <li>Coins: {{ $user->coins }}🪙</li>
         <li>Exp: {{ $user->exp }}/{{ $user->exp_next_level }}✨</li>
+        <li>Joined at: {{ $user->created_at }}🗓️</li>
     </ul>
     <hr>
 @endsection
