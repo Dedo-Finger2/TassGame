@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Urgence;
 use App\Models\Difficulty;
 use App\Models\Importance;
-use App\Models\Task;
-use App\Models\Urgence;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class TaskController extends Controller
 {
@@ -25,13 +26,70 @@ class TaskController extends Controller
 
     public function myTasks()
     {
-        $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->get();
-        $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->get();
+        $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
+        $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
+        $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
 
         return view('task.my-tasks', [
             'todayTasks' => $todayTasks,
             'recurringTasks' => $recurringTasks,
+            'completedTasks' => $completedTasks,
         ]);
+    }
+
+    public function myCompletedTasks()
+    {
+        $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
+
+        return view('task.my-completed-tasks', [
+            'completedTasks' => $completedTasks,
+        ]);
+    }
+
+    public function completeTasks(Request $request)
+    {
+        $data = $request->validate([
+            'tasks' => ['array']
+        ]);
+
+        if (count($data) <= 0)
+            return redirect()->back()->with('error', 'No task selected.');
+
+        foreach ($data['tasks'] as $task_id) {
+            $task = Task::find($task_id);
+            // TODO: Adicoinar EXP e COIN ao usuário
+            $taskCoins = $task->coins;
+            $taskExp = $task->exp;
+
+            $task->completed_at = Carbon::now();
+
+            $task->save();
+        }
+
+        return redirect()->back()->with('success', count($data['tasks']) . "  tasks marked as done!");
+    }
+
+    public function uncompleteTasks(Request $request)
+    {
+        $data = $request->validate([
+            'tasks' => ['array']
+        ]);
+
+        if (count($data) <= 0)
+            return redirect()->back()->with('error', 'No task selected.');
+
+        foreach ($data['tasks'] as $task_id) {
+            $task = Task::find($task_id);
+            // TODO: Remover EXP e COIN ao usuário
+            $taskCoins = $task->coins;
+            $taskExp = $task->exp;
+
+            $task->completed_at = null;
+
+            $task->save();
+        }
+
+        return redirect()->back()->with('success', count($data['tasks']) . "  tasks unmarked as done!");
     }
 
     /**

@@ -11,6 +11,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
     <hr>
     @if (count($tasks) > 0)
         @foreach ($tasks as $task)

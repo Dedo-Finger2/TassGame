@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'List of Tasks')
+@section('title', 'List of My Tasks')
 
 @section('content')
     <h1>Tasks</h1>
@@ -11,30 +11,48 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
     <hr>
+
     @if (count($todayTasks) > 0)
         <h2>Today's tasks</h2>
-        @foreach ($todayTasks as $task)
-            <div>
-                <h2>{{ $task->name }}</h2>
-                <a href="{{ route('tasks.show', ['task' => $task]) }}">View</a>
-            </div>
-            <hr>
-        @endforeach
+
+        <form action="{{ route('tasks.complete-tasks') }}" method="POST">
+            @csrf
+
+            @foreach ($todayTasks as $task)
+                <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
+                {{ $task->exp }}✨ | {{ $task->coins }}🪙 | <a
+                    href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
+            @endforeach
     @else
         <span>No Tasks for today found!</span>
     @endif
-    <br><br>
+
     @if (count($recurringTasks) > 0)
         <h2>Today's recurring tasks</h2>
+
         @foreach ($recurringTasks as $task)
-            <div>
-                <h2>{{ $task->name }}</h2>
-                <a href="{{ route('tasks.show', ['task' => $task]) }}">View</a>
-            </div>
+            <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
+            {{ $task->exp }}✨ | {{ $task->coins }}🪙 | <a
+                href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
         @endforeach
-        <hr>
+
+        <br><br>
+        <input type="submit" value="Complete Selected tasks" name="complete-button" id="complete-button">
     @else
-        <span>No Recurring Tasks found!</span>
+        <br><span>No Recurring Tasks found!</span>
     @endif
+    </form>
+
+
+    <br><br>
+
+
+
 @endsection

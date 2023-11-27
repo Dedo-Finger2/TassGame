@@ -76,3 +76,6 @@ Route::get('/tasks/{task}/view', [TaskController::class, 'show'])->name('tasks.s
 Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy')->middleware('auth');
 // Tasks User
 Route::get('/my-tasks', [TaskController::class, 'myTasks'])->name('tasks.my-tasks')->middleware('auth');
+Route::get('/my-completed-tasks', [TaskController::class, 'myCompletedTasks'])->name('tasks.my-completed-tasks')->middleware('auth');
+Route::post('/complete-my-tasks', [TaskController::class, 'completeTasks'])->name('tasks.complete-tasks')->middleware('auth');
+Route::post('/uncomplete-my-tasks', [TaskController::class, 'uncompleteTasks'])->name('tasks.uncomplete-tasks')->middleware('auth');
