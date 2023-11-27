@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UrgenceController;
@@ -63,3 +64,15 @@ Route::get('/difficulties/{difficulty}', [DifficultyController::class, 'edit'])-
 Route::put('/difficulties/{difficulty}', [DifficultyController::class, 'update'])->name('difficulties.update')->middleware('auth');
 Route::get('/difficulties/{difficulty}/view', [DifficultyController::class, 'show'])->name('difficulties.show')->middleware('auth');
 Route::delete('/difficulties/{difficulty}', [DifficultyController::class, 'destroy'])->name('difficulties.destroy')->middleware('auth');
+
+
+// Tasks
+Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index')->middleware('auth');
+Route::get('/tasks-creation', [TaskController::class, 'create'])->name('tasks.create')->middleware('auth');
+Route::post('/tasks-creation', [TaskController::class, 'store'])->name('tasks.store')->middleware('auth');
+Route::get('/tasks/{task}', [TaskController::class, 'edit'])->name('tasks.edit')->middleware('auth');
+Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update')->middleware('auth');
+Route::get('/tasks/{task}/view', [TaskController::class, 'show'])->name('tasks.show')->middleware('auth');
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy')->middleware('auth');
+// Tasks User
+Route::get('/my-tasks', [TaskController::class, 'myTasks'])->name('tasks.my-tasks')->middleware('auth');

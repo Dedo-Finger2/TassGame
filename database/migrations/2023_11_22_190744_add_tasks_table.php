@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('name')->nullable(false);
             $table->string('description')->nullable(false);
             $table->decimal('coins', 10, 2)->nullable(false);
-            $table->boolean('recurring')->default(false);
+            $table->boolean('recurring')->default(false)->nullable(false);
             $table->float('exp')->nullable(false);
             $table->dateTime('completed_at')->nullable(true);
             $table->timestamps();

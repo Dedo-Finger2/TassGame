@@ -4,6 +4,7 @@
 @section('content')
     <h1>Profile</h1>
     <span>Welcome {{ $user->name }}!</span>
+    <a href="{{ route('tasks.my-tasks') }}">My Tasks</a>
     <hr>
 
     <h2>Status:</h2>
