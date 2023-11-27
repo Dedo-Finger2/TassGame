@@ -2,7 +2,18 @@
 @section('title', 'Create xxx')
 
 @section('content')
-    <form action="" method="POST">
+
+    @if ($errors->any())
+        <div>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('urgences.store') }}" method="POST">
         @csrf
 
         <label for="name">Name</label>
