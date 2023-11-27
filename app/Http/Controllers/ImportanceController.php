@@ -12,7 +12,11 @@ class ImportanceController extends Controller
      */
     public function index()
     {
-        //
+        $importances = Importance::all();
+
+        return view('importance.index', [
+            'importances' => $importances,
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class ImportanceController extends Controller
      */
     public function create()
     {
-        //
+        return view('importance.create');
     }
 
     /**
@@ -28,7 +32,16 @@ class ImportanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name'        => ['required', 'string', 'unique:importances'],
+            'exp'         => ['required', 'numeric', 'min:1'],
+            'coins'       => ['required', 'numeric', 'min:1'],
+            'description' => ['required', 'string', 'min:3'],
+        ]);
+
+        Importance::create($data);
+
+        return redirect()->route('importances.index')->with('success', 'New importance added!');
     }
 
     /**
@@ -36,7 +49,9 @@ class ImportanceController extends Controller
      */
     public function show(Importance $importance)
     {
-        //
+        return view('importance.show', [
+            'importance' => $importance,
+        ]);
     }
 
     /**
@@ -44,7 +59,9 @@ class ImportanceController extends Controller
      */
     public function edit(Importance $importance)
     {
-        //
+        return view('importance.edit', [
+            'importance' => $importance,
+        ]);
     }
 
     /**
@@ -52,7 +69,19 @@ class ImportanceController extends Controller
      */
     public function update(Request $request, Importance $importance)
     {
-        //
+        $data = $request->validate([
+            'name'        => ['required', 'string', 'unique:importances,name,' . $importance->id,],
+            'exp'         => ['required', 'numeric', 'min:1'],
+            'coins'       => ['required', 'numeric', 'min:1'],
+            'description' => ['required', 'string', 'min:3'],
+        ]);
+
+        try {
+            $importance->update($data);
+            return redirect()->route('importances.index')->with('success', 'Importance updated!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     /**
@@ -60,6 +89,11 @@ class ImportanceController extends Controller
      */
     public function destroy(Importance $importance)
     {
-        //
+        try {
+            $importance->delete();
+            return redirect()->route('importances.index')->with('success', 'Importance deleted!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

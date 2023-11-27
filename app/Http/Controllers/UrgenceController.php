@@ -33,9 +33,9 @@ class UrgenceController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'unique:urgences'],
-            'exp' => ['required', 'numeric', 'min:1'],
-            'coins' => ['required', 'numeric', 'min:1'],
+            'name'        => ['required', 'string', 'unique:urgences'],
+            'exp'         => ['required', 'numeric', 'min:1'],
+            'coins'       => ['required', 'numeric', 'min:1'],
             'description' => ['required', 'string', 'min:3'],
         ]);
 

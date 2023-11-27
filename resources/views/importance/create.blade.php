@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Create urgence')
+@section('title', 'Create importance')
 
 @section('content')
 
@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <form action="{{ route('urgences.store') }}" method="POST">
+    <form action="{{ route('importances.store') }}" method="POST">
         @csrf
 
         <label for="name">Name</label>
