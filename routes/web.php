@@ -28,7 +28,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 // Home
 Route::get('/', function () {
     return view('welcome');
-})->name('home')->middleware('auth');   
+})->name('home')->middleware('auth');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
 
 // Urgences
@@ -38,4 +38,4 @@ Route::post('/urgences-creation', [UrgenceController::class, 'store'])->name('ur
 Route::get('/urgences/{urgence}', [UrgenceController::class, 'edit'])->name('urgences.edit')->middleware('auth');
 Route::put('/urgences/{urgence}', [UrgenceController::class, 'update'])->name('urgences.update')->middleware('auth');
 Route::get('/urgences/{urgence}/view', [UrgenceController::class, 'show'])->name('urgences.show')->middleware('auth');
-Route::post('/urgences/{urgence}', [UrgenceController::class, 'destroy'])->name('urgences.destroy')->middleware('auth');
+Route::delete('/urgences/{urgence}', [UrgenceController::class, 'destroy'])->name('urgences.destroy')->middleware('auth');

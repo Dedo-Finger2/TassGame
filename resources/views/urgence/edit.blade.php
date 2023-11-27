@@ -1,13 +1,34 @@
 @extends('layouts.app')
-@section('title', 'Edit xxx')
+@section('title', 'Edit urgence')
 
 @section('content')
-    <form action="" method="POST">
+
+    @if ($errors->any())
+        <div>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('urgences.update', ['urgence' => $urgence]) }}" method="POST">
         @csrf
+        @method('PUT')
 
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" value="{{ $urgence->name }}">
 
-        <input type="submit" value="Login" name="login" id="login">
+        <label for="exp">Exp</label>
+        <input type="number" name="exp" id="exp" value="{{ $urgence->exp }}">
+
+        <label for="coins">Coins</label>
+        <input type="number" name="coins" id="coins" value="{{ $urgence->coins }}">
+
+        <label for="description">Description</label>
+        <textarea name="description" id="description" cols="30" rows="10">{{ $urgence->description }}</textarea>
+
+        <input type="submit" value="Edit" name="edit" id="edit">
     </form>
 @endsection

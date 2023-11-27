@@ -41,7 +41,7 @@ class UrgenceController extends Controller
 
         Urgence::create($data);
 
-        return redirect()->route('urgences.index')->with('success','New urgence added!');
+        return redirect()->route('urgences.index')->with('success', 'New urgence added!');
     }
 
     /**
@@ -59,7 +59,9 @@ class UrgenceController extends Controller
      */
     public function edit(Urgence $urgence)
     {
-        return view('urgence.edit');
+        return view('urgence.edit', [
+            'urgence' => $urgence,
+        ]);
     }
 
     /**
@@ -67,7 +69,19 @@ class UrgenceController extends Controller
      */
     public function update(Request $request, Urgence $urgence)
     {
-        //
+        $data = $request->validate([
+            'name'        => ['required', 'string', 'unique:urgences,name,' . $urgence->id,],
+            'exp'         => ['required', 'numeric', 'min:1'],
+            'coins'       => ['required', 'numeric', 'min:1'],
+            'description' => ['required', 'string', 'min:3'],
+        ]);
+
+        try {
+            $urgence->update($data);
+            return redirect()->route('urgences.index')->with('success', 'Urgence updated!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     /**
@@ -75,6 +89,11 @@ class UrgenceController extends Controller
      */
     public function destroy(Urgence $urgence)
     {
-        //
+        try {
+            $urgence->delete();
+            return redirect()->route('urgences.index')->with('success', 'Urgence deleted!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

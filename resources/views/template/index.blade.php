@@ -20,7 +20,7 @@
                     <li>{{ }}</li>
                 </ul>
                 <p>{{ }}</p>
-                <a href="">View</a> - <a href="">Edit</a>
+                <a href="">View</a>
             </div>
             <hr>
         @endforeach

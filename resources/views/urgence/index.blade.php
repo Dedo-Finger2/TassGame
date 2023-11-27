@@ -21,7 +21,7 @@
                     <li>{{ $urgence->coins }}🪙</li>
                 </ul>
                 <p>{{ $urgence->description }}</p>
-                <a href="">View</a> - <a href="">Edit</a>
+                <a href="{{ route('urgences.show', ['urgence' => $urgence]) }}">View</a>
             </div>
             <hr>
         @endforeach
