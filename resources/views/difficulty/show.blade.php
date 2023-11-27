@@ -1,14 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Show urgence')
+@section('title', 'Show difficulty')
 
 @section('content')
-    <h1>{{ $urgence->name }}</h1>
-    <button id="confirm-delete">Delete</button> - <a href="{{ route('urgences.edit', ['urgence' => $urgence]) }}">Edit</a>
+    <h1>{{ $difficulty->name }}</h1>
+    <button id="confirm-delete">Delete</button> - <a href="{{ route('difficulties.edit', ['difficulty' => $difficulty]) }}">Edit</a>
     <hr>
 
     <div id="modal-deletion" style="display: none; z-index: 1; border: 1px solid black; padding: 20px">
-        <h1>You sure you want to delete {{ $urgence->name }}?</h1>
-        <form action="{{ route('urgences.destroy', ['urgence' => $urgence]) }}" method="POST">
+        <h1>You sure you want to delete {{ $difficulty->name }}?</h1>
+        <form action="{{ route('difficulties.destroy', ['difficulty' => $difficulty]) }}" method="POST">
             @csrf
             @method('DELETE')
             <button type="submit" id="delete-button">Delete</button>
@@ -18,9 +18,9 @@
     </div>
 
     <ul>
-        <li>This urgence boost your tasks with {{ $urgence->coins }}🪙</li>
-        <li>This urgence boost your tasks with {{ $urgence->exp }}✨</li>
-        <li>Description: {{ $urgence->description }}</li>
+        <li>This difficulty boost your tasks with {{ $difficulty->coins }}🪙</li>
+        <li>This difficulty boost your tasks with {{ $difficulty->exp }}✨</li>
+        <li>Description: {{ $difficulty->description }}</li>
     </ul>
 
     <script>
