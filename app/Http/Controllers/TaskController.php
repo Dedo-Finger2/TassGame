@@ -58,8 +58,8 @@ class TaskController extends Controller
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
             // TODO: Adicoinar EXP e COIN ao usuário
-            $taskCoins = $task->coins;
-            $taskExp = $task->exp;
+            UserController::earnCoins($task->coins);
+            UserController::earnExp($task->exp);
 
             $task->completed_at = Carbon::now();
 
@@ -81,8 +81,8 @@ class TaskController extends Controller
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
             // TODO: Remover EXP e COIN ao usuário
-            $taskCoins = $task->coins;
-            $taskExp = $task->exp;
+            UserController::loseCoins($task->coins);
+            UserController::loseExp($task->exp);
 
             $task->completed_at = null;
 
@@ -129,7 +129,7 @@ class TaskController extends Controller
 
         $task = Task::create($data);
 
-        if ($data['recurring']) {
+        if (isset($data['recurring'])) {
             $task->recurring = 1;
             $task->save();
         }
