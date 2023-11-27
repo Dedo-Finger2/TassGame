@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UrgenceController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,7 +28,8 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 // Home
 Route::get('/', function () {
     return view('welcome');
-})->name('home')->middleware('auth');
+})->name('home')->middleware('auth');   
+Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
 
 // Urgences
 Route::get('/urgences', [UrgenceController::class, 'index'])->name('urgences.index')->middleware('auth');
