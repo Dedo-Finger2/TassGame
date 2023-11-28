@@ -1,13 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Show xxx')
+@section('title', 'Show Task')
 
 @section('content')
-    <h1>{{  }}</h1>
-    <button id="confirm-delete">Delete</button> - <a href="">Edit</a>
+    <h1>{{ $task->name }}</h1>
+    <button id="confirm-delete">Delete</button> - <a href="{{ route('tasks.edit', ['task' => $task]) }}">Edit</a>
     <hr>
 
-    <div id="modal-deletion" style="display: none; z-index: 1; border: 1px solid black; padding: 20px">
-        <h1>You sure you want to delete {{  }}?</h1>
+    <dialog id="modal-deletion">
+        <h1>You sure you want to delete {{ $task->name }}?</h1>
         <form action="" method="POST">
             @csrf
             @method('DELETE')
@@ -15,10 +15,20 @@
         </form>
         <br>
         <button id="close-modal">Close</button>
-    </div>
+    </dialog>
 
+    <h2>Status:</h2>
     <ul>
-        <li></li>
+        <li>{{ $task->coins }}🪙</li>
+        <li>{{ $task->exp }}✨</li>
+        <li>🔁: @if ($task->recurring) True @else False @endif</li>
+        <li>✅: @if ($task->completed_at) {{ $task->completed_at }} @else No @endif</li>
+    </ul>
+    <textarea readonly disabled name="description" id="description" cols="30" rows="10">{{ $task->description }}</textarea>
+    <hr>
+    <h2>Subtasks Related:</h2>
+    <ul>
+        <li>...</li>
     </ul>
 
     <script>
@@ -27,16 +37,16 @@
         var btn_close = document.getElementById("close-modal");
 
         btn.onclick = function() {
-            modal.style.display = "block";
+            modal.showModal();
         }
 
         btn_close.onclick = function() {
-            modal.style.display = "none";
+            modal.close();
         }
 
         window.onclick = function(event) {
             if (event.target == modal) {
-                modal.style.display = "none";
+                modal.close();
             }
         }
     </script>

@@ -26,12 +26,12 @@ class TaskController extends Controller
 
     public function myTasks()
     {
-        $todayTasks     = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
+        $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
 
         return view('task.my-tasks', [
-            'todayTasks'     => $todayTasks,
+            'todayTasks' => $todayTasks,
             'recurringTasks' => $recurringTasks,
             'completedTasks' => $completedTasks,
         ]);
@@ -95,7 +95,7 @@ class TaskController extends Controller
 
     private function setTaskCoins(array $data)
     {
-        $urgenceCoins    = Urgence::where('id', $data['urgence_id'])->pluck('coins');
+        $urgenceCoins = Urgence::where('id', $data['urgence_id'])->pluck('coins');
         $importanceCoins = Importance::where('id', $data['importance_id'])->pluck('coins');
         $difficultyCoins = Difficulty::where('id', $data['difficulty_id'])->pluck('coins');
 
@@ -107,7 +107,7 @@ class TaskController extends Controller
 
     private function setTaskExp(array $data)
     {
-        $urgenceExp    = Urgence::where('id', $data['urgence_id'])->pluck('exp');
+        $urgenceExp = Urgence::where('id', $data['urgence_id'])->pluck('exp');
         $importanceExp = Importance::where('id', $data['importance_id'])->pluck('exp');
         $difficultyExp = Difficulty::where('id', $data['difficulty_id'])->pluck('exp');
 
@@ -121,15 +121,15 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $users        = User::all();
-        $urgences     = Urgence::all();
-        $importances  = Importance::all();
+        $users = User::all();
+        $urgences = Urgence::all();
+        $importances = Importance::all();
         $difficulties = Difficulty::all();
 
         return view('task.create', [
-            'users'        => $users,
-            'urgences'     => $urgences,
-            'importances'  => $importances,
+            'users' => $users,
+            'urgences' => $urgences,
+            'importances' => $importances,
             'difficulties' => $difficulties,
         ]);
     }
@@ -140,13 +140,13 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'          => ['required', 'string', 'unique:tasks'],
-            'description'   => ['string'],
-            'recurring'     => ['numeric'],
+            'name' => ['required', 'string', 'unique:tasks'],
+            'description' => ['string'],
+            'recurring' => ['numeric'],
             'importance_id' => ['required', 'exists:importances,id'],
-            'urgence_id'    => ['required', 'exists:urgences,id'],
+            'urgence_id' => ['required', 'exists:urgences,id'],
             'difficulty_id' => ['required', 'exists:difficulties,id'],
-            'user_id'       => ['required', 'exists:users,id'],
+            'user_id' => ['required', 'exists:users,id'],
         ]);
 
         $data['coins'] = $this->setTaskCoins($data);
@@ -167,7 +167,9 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return view('task.show', [
+            'task' => $task,
+        ]);
     }
 
     /**
@@ -175,7 +177,18 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        $users = User::all();
+        $urgences = Urgence::all();
+        $importances = Importance::all();
+        $difficulties = Difficulty::all();
+
+        return view('task.edit', [
+            'task' => $task,
+            'users' => $users,
+            'urgences' => $urgences,
+            'importances' => $importances,
+            'difficulties' => $difficulties,
+        ]);
     }
 
     /**
@@ -183,7 +196,30 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required', 'string', 'unique:tasks,name,' . $task->id],
+            'description' => ['string'],
+            'recurring' => ['numeric'],
+            'importance_id' => ['required', 'exists:importances,id'],
+            'urgence_id' => ['required', 'exists:urgences,id'],
+            'difficulty_id' => ['required', 'exists:difficulties,id'],
+            'user_id' => ['required', 'exists:users,id'],
+        ]);
+
+        $data['coins'] = $this->setTaskCoins($data);
+        $data['exp'] = $this->setTaskExp($data);
+
+        $task->update($data);
+
+        if (isset($data['recurring'])) {
+            $task->recurring = true;
+            $task->save();
+        } else {
+            $task->recurring = false;
+            $task->save();
+        }
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated!');
     }
 
     /**
