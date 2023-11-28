@@ -26,12 +26,12 @@ class TaskController extends Controller
 
     public function myTasks()
     {
-        $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
+        $todayTasks     = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
 
         return view('task.my-tasks', [
-            'todayTasks' => $todayTasks,
+            'todayTasks'     => $todayTasks,
             'recurringTasks' => $recurringTasks,
             'completedTasks' => $completedTasks,
         ]);
@@ -121,9 +121,9 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        $urgences = Urgence::all();
-        $importances = Importance::all();
+        $users        = User::all();
+        $urgences     = Urgence::all();
+        $importances  = Importance::all();
         $difficulties = Difficulty::all();
 
         return view('task.create', [
