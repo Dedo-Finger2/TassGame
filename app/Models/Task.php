@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Difficulty;
+use App\Models\Importance;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model
 {
@@ -24,4 +27,27 @@ class Task extends Model
         'difficulty_id',
         'user_id',
     ];
+
+    public function urgence()
+    {
+        return $this->belongsTo(Urgence::class);
+    }
+
+
+    public function importance()
+    {
+        return $this->belongsTo(Importance::class);
+    }
+
+
+    public function difficulty()
+    {
+        return $this->belongsTo(Difficulty::class);
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

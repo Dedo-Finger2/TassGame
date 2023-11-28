@@ -57,7 +57,7 @@ class TaskController extends Controller
 
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
-            // TODO: Adicoinar EXP e COIN ao usuário
+
             UserController::earnCoins($task->coins);
             UserController::earnExp($task->exp);
 
