@@ -32,21 +32,19 @@ class UserController extends Controller
     {
         $user = User::find(auth()->user()->id);
 
-        if ($amount <= 0) return redirect()->back()->with("error","Invalid amount of coins.");
+        if ($amount <= 0) return redirect()->back()->with("error", "Invalid amount of exp.");
 
-        if ($user->exp + $amount < $user->exp_next_level) {
-            $user->exp += $amount;
-        } elseif ($user->exp + $amount >= $user->exp_next_level) {
+        $user->exp += $amount;
+
+        while ($user->exp >= $user->exp_next_level) {
+            $user->exp -= $user->exp_next_level;
             $user->level += 1;
-            $userTotalExp = $user->exp += $amount;
-
-            $user->exp = $userTotalExp % $user->exp_next_level;
-
             $user->exp_next_level += 50;
         }
 
         $user->save();
     }
+
 
 
     public static function loseCoins(int $amount)
@@ -56,6 +54,9 @@ class UserController extends Controller
         if ($amount <= 0) return redirect()->back()->with("error","Invalid amount of coins.");
 
         $user->coins -= $amount;
+
+        if ($user->coins < 0) $user->coins = 0;
+
         $user->save();
     }
 
@@ -64,25 +65,27 @@ class UserController extends Controller
     {
         $user = User::find(auth()->user()->id);
 
-        if ($amount <= 0) return redirect()->back()->with("error","Invalid amount of coins.");
+        if ($amount <= 0) {
+            return redirect()->back()->with("error", "Invalid amount of exp.");
+        }
 
-        while ($amount > 0) {
-            if ($user->exp >= $amount) {
-                $user->exp -= $amount;
-                $amount = 0;
-            } else {
+        if ($user->exp - $amount >= 0) {
+            $user->exp -= $amount;
+        } else {
+            while ($amount > 0 && $user->level > 0) {
+                $user->level -= 1;
+                $user->exp_next_level -= 50;
+
                 $amount -= $user->exp;
-                $user->exp = 0;
+                $user->exp = $user->exp_next_level - $amount;
 
-                if ($user->level > 1) {
-                    $user->level -= 1;
-                    $user->exp_next_level -= 50;
-                    $user->exp = $user->exp_next_level;
+                if ($user->exp < 0) {
+                    $amount -= $user->exp;
+                    $user->exp = 0;
                 }
             }
         }
 
         $user->save();
     }
-
 }
