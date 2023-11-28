@@ -19,11 +19,11 @@
         <label for="name">Name</label>
         <input type="text" name="name" id="name" value="{{ old('name') }}">
 
-        <label for="exp">Exp</label>
+        {{-- <label for="exp">Exp</label>
         <input type="number" name="exp" id="exp" value="{{ old('exp') }}">
 
         <label for="coins">Coins</label>
-        <input type="number" name="coins" id="coins" value="{{ old('coins') }}">
+        <input type="number" name="coins" id="coins" value="{{ old('coins') }}"> --}}
 
         <label for="recurring">Recurring</label>
         @if (old('recurring') == true || old('recurring') === "1")

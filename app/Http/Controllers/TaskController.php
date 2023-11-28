@@ -80,7 +80,7 @@ class TaskController extends Controller
 
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
-            // TODO: Remover EXP e COIN ao usuário
+
             UserController::loseCoins($task->coins);
             UserController::loseExp($task->exp);
 
@@ -90,6 +90,30 @@ class TaskController extends Controller
         }
 
         return redirect()->back()->with('success', count($data['tasks']) . "  tasks unmarked as done!");
+    }
+
+
+    private function setTaskCoins(array $data)
+    {
+        $urgenceCoins    = Urgence::where('id', $data['urgence_id'])->pluck('coins');
+        $importanceCoins = Importance::where('id', $data['importance_id'])->pluck('coins');
+        $difficultyCoins = Difficulty::where('id', $data['difficulty_id'])->pluck('coins');
+
+        $taskSumCoins = $urgenceCoins[0] + $importanceCoins[0] + $difficultyCoins[0];
+
+        return $taskSumCoins;
+    }
+
+
+    private function setTaskExp(array $data)
+    {
+        $urgenceExp    = Urgence::where('id', $data['urgence_id'])->pluck('exp');
+        $importanceExp = Importance::where('id', $data['importance_id'])->pluck('exp');
+        $difficultyExp = Difficulty::where('id', $data['difficulty_id'])->pluck('exp');
+
+        $taskSumExp = $urgenceExp[0] + $importanceExp[0] + $difficultyExp[0];
+
+        return $taskSumExp;
     }
 
     /**
@@ -103,9 +127,9 @@ class TaskController extends Controller
         $difficulties = Difficulty::all();
 
         return view('task.create', [
-            'users' => $users,
-            'urgences' => $urgences,
-            'importances' => $importances,
+            'users'        => $users,
+            'urgences'     => $urgences,
+            'importances'  => $importances,
             'difficulties' => $difficulties,
         ]);
     }
@@ -116,16 +140,17 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'unique:tasks'],
-            'exp' => ['required', 'numeric', 'min:1'],
-            'coins' => ['required', 'numeric', 'min:1'],
-            'description' => ['string'],
-            'recurring' => ['numeric'],
+            'name'          => ['required', 'string', 'unique:tasks'],
+            'description'   => ['string'],
+            'recurring'     => ['numeric'],
             'importance_id' => ['required', 'exists:importances,id'],
-            'urgence_id' => ['required', 'exists:urgences,id'],
+            'urgence_id'    => ['required', 'exists:urgences,id'],
             'difficulty_id' => ['required', 'exists:difficulties,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id'       => ['required', 'exists:users,id'],
         ]);
+
+        $data['coins'] = $this->setTaskCoins($data);
+        $data['exp'] = $this->setTaskExp($data);
 
         $task = Task::create($data);
 
