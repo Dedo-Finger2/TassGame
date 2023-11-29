@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SubTaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -79,3 +80,12 @@ Route::get('/my-tasks', [TaskController::class, 'myTasks'])->name('tasks.my-task
 Route::get('/my-completed-tasks', [TaskController::class, 'myCompletedTasks'])->name('tasks.my-completed-tasks')->middleware('auth');
 Route::post('/complete-my-tasks', [TaskController::class, 'completeTasks'])->name('tasks.complete-tasks')->middleware('auth');
 Route::post('/uncomplete-my-tasks', [TaskController::class, 'uncompleteTasks'])->name('tasks.uncomplete-tasks')->middleware('auth');
+
+// SubTasks
+Route::get('/sub-tasks', [SubTaskController::class, 'index'])->name('sub-tasks.index')->middleware('auth');
+Route::get('/sub-tasks-creation', [SubTaskController::class, 'create'])->name('sub-tasks.create')->middleware('auth');
+Route::post('/sub-tasks-creation', [SubTaskController::class, 'store'])->name('sub-tasks.store')->middleware('auth');
+Route::get('/sub-tasks/{sub-task}', [SubTaskController::class, 'edit'])->name('sub-tasks.edit')->middleware('auth');
+Route::put('/sub-tasks/{sub-task}', [SubTaskController::class, 'update'])->name('sub-tasks.update')->middleware('auth');
+Route::get('/sub-tasks/{sub-task}/view', [SubTaskController::class, 'show'])->name('sub-tasks.show')->middleware('auth');
+Route::delete('/sub-tasks/{sub-task}', [SubTaskController::class, 'destroy'])->name('sub-tasks.destroy')->middleware('auth');

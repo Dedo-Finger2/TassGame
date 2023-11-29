@@ -2,18 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use App\Models\SubTask;
-use App\Models\Difficulty;
-use App\Models\Importance;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class SubTask extends Model
 {
     use HasFactory;
 
-    /**
+        /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -26,7 +22,7 @@ class Task extends Model
         'importance_id',
         'urgence_id',
         'difficulty_id',
-        'user_id',
+        'task_id',
     ];
 
     public function urgence()
@@ -52,8 +48,8 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function subTasks()
+    public function task()
     {
-        return $this->hasMany(SubTask::class);
+        return $this->belongsTo(Task::class);
     }
 }
