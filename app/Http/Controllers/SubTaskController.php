@@ -53,7 +53,7 @@ class SubTaskController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'unique:subtasks'],
+            'name' => ['required', 'string', 'unique:sub_tasks'],
             'description' => ['string'],
             'importance_id' => ['required', 'exists:importances,id'],
             'urgence_id' => ['required', 'exists:urgences,id'],
@@ -78,7 +78,7 @@ class SubTaskController extends Controller
 
         $taskSumCoins = $urgenceCoins[0] + $importanceCoins[0] + $difficultyCoins[0];
 
-        return $taskSumCoins;
+        return $taskSumCoins / 3;
     }
 
 
@@ -90,7 +90,7 @@ class SubTaskController extends Controller
 
         $taskSumExp = $urgenceExp[0] + $importanceExp[0] + $difficultyExp[0];
 
-        return $taskSumExp;
+        return $taskSumExp / 3;
     }
 
 
