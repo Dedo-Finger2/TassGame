@@ -91,13 +91,6 @@
     @endif
 
     <script>
-        document.getElementById('complete-Subtasks').onclick = function() {
-            document.getElementById('formId').action = "{{ route('sub-tasks.complete') }}";
-        }
-        document.getElementById('uncomplete-Subtasks').onclick = function() {
-            document.getElementById('formId').action = "{{ route('sub-tasks.uncomplete') }}";
-        }
-
         var modal = document.getElementById("modal-deletion");
         var btn = document.getElementById("confirm-delete");
         var btn_close = document.getElementById("close-modal");
@@ -114,6 +107,14 @@
             if (event.target == modal) {
                 modal.close();
             }
+        }
+
+        document.getElementById('complete-Subtasks').onclick = function() {
+            document.getElementById('formId').action = "{{ route('sub-tasks.complete') }}";
+        }
+
+        document.getElementById('uncomplete-Subtasks').onclick = function() {
+            document.getElementById('formId').action = "{{ route('sub-tasks.uncomplete') }}";
         }
     </script>
 

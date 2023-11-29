@@ -17,6 +17,12 @@ class UserController extends Controller
     }
 
 
+    public function dashboard()
+    {
+        return view("user.dashboard");
+    }
+
+
     public static function earnCoins(int $amount)
     {
         $user = User::find(auth()->user()->id);

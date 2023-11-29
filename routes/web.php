@@ -30,11 +30,12 @@ Route::post('/register', [LoginController::class, 'store'])->name('register.stor
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-// Home
+// User
 Route::get('/', function () {
     return view('home');
 })->name('home')->middleware('auth');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
+Route::get('/my-dashboard', [UserController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 
 
 // Urgences
