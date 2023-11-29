@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubTask;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Urgence;
@@ -167,8 +168,13 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        $subTasks = SubTask::where('task_id', $task->id)->where('completed_at', null)->get();
+        $completedSubTasks = SubTask::where('task_id', $task->id)->where('completed_at', "!=", null)->get();
+
         return view('task.show', [
             'task' => $task,
+            'subTasks' => $subTasks,
+            'completedSubTasks' => $completedSubTasks,
         ]);
     }
 

@@ -89,3 +89,6 @@ Route::get('/sub-tasks/{sub-task}', [SubTaskController::class, 'edit'])->name('s
 Route::put('/sub-tasks/{sub-task}', [SubTaskController::class, 'update'])->name('sub-tasks.update')->middleware('auth');
 Route::get('/sub-tasks/{sub-task}/view', [SubTaskController::class, 'show'])->name('sub-tasks.show')->middleware('auth');
 Route::delete('/sub-tasks/{sub-task}', [SubTaskController::class, 'destroy'])->name('sub-tasks.destroy')->middleware('auth');
+
+Route::post('/uncomplete-sub-tasks', [SubTaskController::class, 'uncompleteSubTasks'])->name('sub-tasks.uncomplete')->middleware('auth');
+Route::post('/complete-sub-tasks', [SubTaskController::class, 'completeSubTasks'])->name('sub-tasks.complete')->middleware('auth');

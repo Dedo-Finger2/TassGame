@@ -9,6 +9,7 @@ use App\Models\Urgence;
 use App\Models\Difficulty;
 use App\Models\Importance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class SubTaskController extends Controller
 {
@@ -90,5 +91,53 @@ class SubTaskController extends Controller
         $taskSumExp = $urgenceExp[0] + $importanceExp[0] + $difficultyExp[0];
 
         return $taskSumExp;
+    }
+
+
+    public function completeSubTasks(Request $request)
+    {
+        $data = $request->validate([
+            'subTasks'=> ['array'],
+        ]);
+
+        if (count($data) <= 0)
+            return redirect()->back()->with('error', 'No sub-task selected.');
+
+        foreach ($data['subTasks'] as $subTaks_id) {
+            $subTask = SubTask::find($subTaks_id);
+
+            UserController::earnCoins($subTask->coins);
+            UserController::earnExp($subTask->exp);
+
+            $subTask->completed_at = Carbon::now();
+
+            $subTask->save();
+        }
+
+        return redirect()->back()->with('success', count($data['subTasks']) . "  sub-tasks marked as done!");
+    }
+
+
+    public function uncompleteSubTasks(Request $request)
+    {
+        $data = $request->validate([
+            'subTasks' => ['array']
+        ]);
+
+        if (count($data) <= 0)
+            return redirect()->back()->with('error', 'No task selected.');
+
+        foreach ($data['subTasks'] as $subTask_id) {
+            $subTask = SubTask::find($subTask_id);
+
+            UserController::loseCoins($subTask->coins);
+            UserController::loseExp($subTask->exp);
+
+            $subTask->completed_at = null;
+
+            $subTask->save();
+        }
+
+        return redirect()->back()->with('success', count($data['subTasks']) . "  subTasks unmarked as done!");
     }
 }
