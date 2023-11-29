@@ -27,7 +27,7 @@
 
             @foreach ($todayTasks as $task)
                 <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
-                {{ $task->exp }}✨ | {{ $task->coins }}🪙 | <a
+                {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if(count($task->subtasks) > 0) | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅ @else @endif | <a
                     href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
             @endforeach
         @else
@@ -39,7 +39,7 @@
 
         @foreach ($recurringTasks as $task)
             <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
-            {{ $task->exp }}✨ | {{ $task->coins }}🪙 | <a
+            {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if(count($task->subtasks) > 0) | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅ @else @endif | <a
                 href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
         @endforeach
 

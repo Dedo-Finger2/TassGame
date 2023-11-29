@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\SubTask;
 use App\Models\Difficulty;
 use App\Models\Importance;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -56,4 +57,10 @@ class Task extends Model
     {
         return $this->hasMany(SubTask::class);
     }
+
+    public function completedSubTasks()
+    {
+        return $this->hasMany(SubTask::class)->whereNotNull('completed_at');
+    }
+
 }
