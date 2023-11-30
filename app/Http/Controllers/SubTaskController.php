@@ -201,6 +201,11 @@ class SubTaskController extends Controller
      */
     public function destroy(Subtask $subTask)
     {
-        //
+        try {
+            $subTask->delete();
+            return redirect()->route('sub-tasks.index')->with('success', 'SubTask deleted!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

@@ -251,6 +251,11 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        try {
+            $task->delete();
+            return redirect()->route('tasks.index')->with('success', 'Task deleted!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }
