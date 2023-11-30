@@ -18,5 +18,29 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        for ($i = 1; $i < 4; $i++) {
+            \App\Models\Urgence::factory()->create([
+                'name' => "Urgence nº$i",
+                'description' => "teste nº$i",
+                'exp' => 12 * ($i / 2),
+                'coins' => 5.43 * ($i / 2),
+            ]);
+
+            \App\Models\Difficulty::factory()->create([
+                'name' => "Difficulty nº$i",
+                'description' => "teste nº$i",
+                'exp' => 13 * ($i / 2),
+                'coins' => 4.43 * ($i / 2),
+            ]);
+
+            \App\Models\Importance::factory()->create([
+                'name' => "Importance nº$i",
+                'description' => "teste nº$i",
+                'exp' => 15 * ($i / 2),
+                'coins' => 8.43 * ($i / 2),
+            ]);
+        }
+
     }
 }
