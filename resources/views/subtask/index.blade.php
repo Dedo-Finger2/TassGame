@@ -22,7 +22,7 @@
         @foreach ($subTasks as $subTask)
             <div>
                 <h2>{{ $subTask->name }}</h2>
-                <a href="{{ route('sub-tasks.show', ['sub-task' => $subTask]) }}">View</a>
+                <a href="{{ route('sub-tasks.show', ['sub_task' => $subTask]) }}">View</a>
             </div>
             <hr>
         @endforeach

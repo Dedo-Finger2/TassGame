@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Edit tasks')
+@section('title', 'Edit SubTask')
 
 @section('content')
 
@@ -13,12 +13,12 @@
         </div>
     @endif
 
-    <form action="{{ route('tasks.update', ['task' => $task]) }}" method="POST">
+    <form action="{{ route('sub-tasks.update', ['sub_task' => $subTask]) }}" method="POST">
         @csrf
         @method('PUT')
 
         <label for="name">Name</label>
-        <input type="text" name="name" id="name" value="{{ $task->name }}">
+        <input type="text" name="name" id="name" value="{{ $subTask->name }}">
 
         {{-- <label for="exp">Exp</label>
         <input type="number" name="exp" id="exp" value="{{ old('exp') }}">
@@ -26,22 +26,22 @@
         <label for="coins">Coins</label>
         <input type="number" name="coins" id="coins" value="{{ old('coins') }}"> --}}
 
-        <label for="recurring">Recurring</label>
-        @if ($task->recurring == true || $task->recurring === '1')
+        {{-- <label for="recurring">Recurring</label>
+        @if ($subTask->recurring == true || $subTask->recurring === '1')
             <input type="checkbox" checked name="recurring" id="recurring" value="{{ true }}">
         @else
             <input type="checkbox" name="recurring" id="recurring" value="{{ true }}">
-        @endif
+        @endif --}}
 
         <label for="description">Description</label>
-        <textarea name="description" id="description" cols="30" rows="10">{{ $task->description }}</textarea>
+        <textarea name="description" id="description" cols="30" rows="10">{{ $subTask->description }}</textarea>
 
         <select name="importance_id" id="importance_id">
             @if (count($importances) <= 0)
                 <option>None</option>
             @else
                 @foreach ($importances as $importance)
-                    @if ($task->importance->id == $importance->id)
+                    @if ($subTask->importance->id == $importance->id)
                         <option selected value="{{ $importance->id }}">{{ $importance->name }}</option>
                     @else
                         <option value="{{ $importance->id }}">{{ $importance->name }}</option>
@@ -55,7 +55,7 @@
                 <option>None</option>
             @else
                 @foreach ($difficulties as $difficulty)
-                    @if ($task->difficulty->id == $difficulty->id)
+                    @if ($subTask->difficulty->id == $difficulty->id)
                         <option selected value="{{ $difficulty->id }}">{{ $difficulty->name }}</option>
                     @else
                         <option value="{{ $difficulty->id }}">{{ $difficulty->name }}</option>
@@ -69,7 +69,7 @@
                 <option>None</option>
             @else
                 @foreach ($urgences as $urgence)
-                    @if ($task->urgence->id == $urgence->id)
+                    @if ($subTask->urgence->id == $urgence->id)
                         <option selected value="{{ $urgence->id }}">{{ $urgence->name }}</option>
                     @else
                         <option value="{{ $urgence->id }}">{{ $urgence->name }}</option>
@@ -78,15 +78,15 @@
             @endif
         </select>
 
-        <select name="user_id" id="user_id">
-            @if (count($users) <= 0)
+        <select name="task_id" id="task_id">
+            @if (count($tasks) <= 0)
                 <option>None</option>
             @else
-                @foreach ($users as $user)
-                    @if ($user->id == auth()->user()->id)
-                        <option selected value="{{ $user->id }}">{{ $user->name }}</option>
+                @foreach ($tasks as $task)
+                    @if ($task->id == $subTask->task->id)
+                        <option selected value="{{ $task->id }}">{{ $task->name }}</option>
                     @else
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        <option value="{{ $task->id }}">{{ $task->name }}</option>
                     @endif
                 @endforeach
             @endif

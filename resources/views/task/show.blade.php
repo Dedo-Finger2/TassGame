@@ -63,7 +63,7 @@
                 {{ $subTask->name }}
                 |
                 {{ $subTask->exp }}✨ | {{ $subTask->coins }}🪙 | <a
-                    href="{{ route('sub-tasks.show', ['sub-task' => $subTask]) }}">View</a><br>
+                    href="{{ route('sub-tasks.show', ['sub_task' => $subTask]) }}">View</a><br>
             @endforeach
             <br>
             <input type="submit" name="complete Subtasks" value="Complete Subtasks" id="complete-Subtasks">

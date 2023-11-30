@@ -1,13 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Show Task')
+@section('title', 'Show SubTask')
 
 @section('content')
-    <h1>{{ $task->name }}</h1>
-    <button id="confirm-delete">Delete</button> - <a href="{{ route('tasks.edit', ['task' => $task]) }}">Edit</a>
+    <h1>{{ $subTask->name }}</h1>
+    <button id="confirm-delete">Delete</button> - <a href="{{ route('sub-tasks.edit', ['sub_task' => $subTask]) }}">Edit</a>
     <hr>
 
     <dialog id="modal-deletion">
-        <h1>You sure you want to delete {{ $task->name }}?</h1>
+        <h1>You sure you want to delete {{ $subTask->name }}?</h1>
         <form action="" method="POST">
             @csrf
             @method('DELETE')
@@ -19,16 +19,15 @@
 
     <h2>Status:</h2>
     <ul>
-        <li>{{ $task->coins }}🪙</li>
-        <li>{{ $task->exp }}✨</li>
-        <li>🔁: @if ($task->recurring) True @else False @endif</li>
-        <li>✅: @if ($task->completed_at) {{ $task->completed_at }} @else No @endif</li>
+        <li>{{ $subTask->coins }}🪙</li>
+        <li>{{ $subTask->exp }}✨</li>
+        <li>✅: @if ($subTask->completed_at) {{ $subTask->completed_at }} @else No @endif</li>
     </ul>
-    <textarea readonly disabled name="description" id="description" cols="30" rows="10">{{ $task->description }}</textarea>
+    <textarea readonly disabled name="description" id="description" cols="30" rows="10">{{ $subTask->description }}</textarea>
     <hr>
-    <h2>Subtasks Related:</h2>
+    <h2>Task Releated:</h2>
     <ul>
-        <li>...</li>
+        <li>{{ $subTask->task->name }} | <a href="{{ route('tasks.show', ['task' => $subTask->task]) }}">View</a></li>
     </ul>
 
     <script>

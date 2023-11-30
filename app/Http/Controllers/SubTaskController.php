@@ -140,4 +140,67 @@ class SubTaskController extends Controller
 
         return redirect()->back()->with('success', count($data['subTasks']) . "  subTasks unmarked as done!");
     }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(SubTask $sub_task)
+    {
+        return view('subtask.show', [
+            'subTask' => $sub_task,
+        ]);
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(SubTask $sub_task)
+    {
+        $tasks = Task::all();
+        $urgences = Urgence::all();
+        $importances = Importance::all();
+        $difficulties = Difficulty::all();
+
+        return view('subtask.edit', [
+            'subTask' => $sub_task,
+            'tasks' => $tasks,
+            'urgences' => $urgences,
+            'importances' => $importances,
+            'difficulties' => $difficulties,
+        ]);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, SubTask $subTask)
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'unique:sub_tasks,name,' . $subTask->id],
+            'description' => ['string'],
+            'importance_id' => ['required', 'exists:importances,id'],
+            'urgence_id' => ['required', 'exists:urgences,id'],
+            'difficulty_id' => ['required', 'exists:difficulties,id'],
+            'task_id' => ['required', 'exists:tasks,id'],
+        ]);
+
+        $data['coins'] = $this->setTaskCoins($data);
+        $data['exp'] = $this->setTaskExp($data);
+
+        $subTask->update($data);
+
+        return redirect()->route('sub-tasks.index')->with('success', 'SubTask updated!');
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Subtask $subTask)
+    {
+        //
+    }
 }
