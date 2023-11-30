@@ -56,6 +56,9 @@ class TaskController extends Controller
         if (count($data) <= 0)
             return redirect()->back()->with('error', 'No task selected.');
 
+        if (!$this->checkTaskSubtasks($data))
+            return redirect()->back()->with('error',"Complete all tasks's subtasks before completing the task itself!");
+
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
 
@@ -116,6 +119,21 @@ class TaskController extends Controller
 
         return $taskSumExp;
     }
+
+
+    private function checkTaskSubtasks(array $data)
+    {
+        foreach ($data['tasks'] as $task) {
+            $task = Task::where('id', $task)->first();
+
+            if (count($task->completedSubTasks) < count($task->subTasks)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * Show the form for creating a new resource.
