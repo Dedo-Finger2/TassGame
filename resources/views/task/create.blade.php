@@ -19,6 +19,7 @@
         <label for="name">Name</label>
         <input type="text" name="name" id="name" value="{{ old('name') }}">
 
+
         {{-- <label for="exp">Exp</label>
         <input type="number" name="exp" id="exp" value="{{ old('exp') }}">
 
@@ -26,11 +27,14 @@
         <input type="number" name="coins" id="coins" value="{{ old('coins') }}"> --}}
 
         <label for="recurring">Recurring</label>
-        @if (old('recurring') == true || old('recurring') === "1")
+        @if (old('recurring') == true || old('recurring') === '1')
             <input type="checkbox" checked name="recurring" id="recurring" value="{{ true }}">
         @else
             <input type="checkbox" name="recurring" id="recurring" value="{{ true }}">
         @endif
+
+        <label for="due_date">Due Date</label>
+        <input type="date" name="due_date" id="due_date" value="{{ old('due_date') }}">
 
         <label for="description">Description</label>
         <textarea name="description" id="description" cols="30" rows="10">{{ old('description') }}</textarea>
