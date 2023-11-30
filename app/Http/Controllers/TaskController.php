@@ -19,6 +19,11 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all();
+        $tasksId = Task::whereNull('overdue')->pluck('id');
+
+        $data['tasks'] = $tasksId;
+
+        $this->checkDueDate($data);
 
         return view('task.index', [
             'tasks' => $tasks,
@@ -30,6 +35,12 @@ class TaskController extends Controller
         $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
+
+        $tasksId = Task::whereNull('overdue')->pluck('id');
+
+        $data['tasks'] = $tasksId;
+
+        $this->checkDueDate($data);
 
         return view('task.my-tasks', [
             'todayTasks' => $todayTasks,
@@ -57,10 +68,14 @@ class TaskController extends Controller
             return redirect()->back()->with('error', 'No task selected.');
 
         if (!$this->checkTaskSubtasks($data))
-            return redirect()->back()->with('error',"Complete all tasks's subtasks before completing the task itself!");
+            return redirect()->back()->with('error', "Complete all tasks's subtasks before completing the task itself!");
+
+
 
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
+            if ($task->overdue == null)
+                $this->checkDueDate($data['tasks']);
 
             UserController::earnCoins($task->coins);
             UserController::earnExp($task->exp);
@@ -132,6 +147,50 @@ class TaskController extends Controller
         }
 
         return true;
+    }
+
+
+    private function checkDueDate(array $data)
+    {
+        foreach ($data['tasks'] as $task) {
+            $task = Task::where('id', $task)->first();
+
+            if ($task->due_date != null && $task->overdue == null) {
+
+                $dateNow = Carbon::now()->setTimezone('America/Sao_Paulo')->startOfDay();
+                $taskDueDate = Carbon::createFromFormat('Y-m-d', $task->due_date);
+
+                if ($dateNow->eq($taskDueDate))
+                    continue;
+
+                if ($dateNow->gt($taskDueDate)) {
+                    $task->overdue = true;
+                    $this->applyOverdueDebuff($task);
+
+                    return false;
+                }
+            } else
+                continue;
+        }
+
+        return true;
+    }
+
+
+    private function applyOverdueDebuff(Task &$task)
+    {
+        if ($task->overdue == null)
+            return false;
+
+        try {
+            $task->coins = $task->coins / 2;
+            $task->exp = $task->exp / 2;
+
+            $task->save();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            die();
+        }
     }
 
 

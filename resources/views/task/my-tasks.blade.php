@@ -27,8 +27,17 @@
 
             @foreach ($todayTasks as $task)
                 <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
-                {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if(count($task->subtasks) > 0) | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅ @else @endif @if ($task->due_date != null) | {{ $task->due_date }}🗓️ @else | ❌📅 @endif | <a
-                    href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
+                {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if (count($task->subtasks) > 0)
+                    | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅
+                @else
+                @endif
+                @if ($task->overdue == true)
+                    | {{ $task->due_date }}(Overdue! ⏰)
+                @elseif ($task->due_date != null)
+                    | {{ $task->due_date }}🗓️
+                @else
+                    | ❌📅
+                @endif | <a href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
             @endforeach
         @else
             <span>No Tasks for today found!</span>
@@ -39,8 +48,10 @@
 
         @foreach ($recurringTasks as $task)
             <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
-            {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if(count($task->subtasks) > 0) | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅ @else @endif | <a
-                href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
+            {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if (count($task->subtasks) > 0)
+                | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅
+            @else
+            @endif | <a href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
         @endforeach
 
         <br><br>
