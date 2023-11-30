@@ -28,6 +28,8 @@ class Task extends Model
         'urgence_id',
         'difficulty_id',
         'user_id',
+        'due_date',
+        'overdue',
     ];
 
     public function urgence()

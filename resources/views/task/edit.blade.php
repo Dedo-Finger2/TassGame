@@ -33,6 +33,9 @@
             <input type="checkbox" name="recurring" id="recurring" value="{{ true }}">
         @endif
 
+        <label for="due_date">Due Date</label>
+        <input type="date" name="due_date" id="due_date" value="{{ $task->due_date }}">
+
         <label for="description">Description</label>
         <textarea name="description" id="description" cols="30" rows="10">{{ $task->description }}</textarea>
 

@@ -166,6 +166,7 @@ class TaskController extends Controller
             'urgence_id' => ['required', 'exists:urgences,id'],
             'difficulty_id' => ['required', 'exists:difficulties,id'],
             'user_id' => ['required', 'exists:users,id'],
+            'due_date' => ['date', 'nullable'],
         ]);
 
         $data['coins'] = $this->setTaskCoins($data);
@@ -228,6 +229,7 @@ class TaskController extends Controller
             'urgence_id' => ['required', 'exists:urgences,id'],
             'difficulty_id' => ['required', 'exists:difficulties,id'],
             'user_id' => ['required', 'exists:users,id'],
+            'due_date' => ['date', 'nullable'],
         ]);
 
         $data['coins'] = $this->setTaskCoins($data);

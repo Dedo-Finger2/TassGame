@@ -27,7 +27,7 @@
 
             @foreach ($todayTasks as $task)
                 <input type="checkbox" value="{{ $task->id }}" name="tasks[]" id="task"> {{ $task->name }} |
-                {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if(count($task->subtasks) > 0) | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅ @else @endif | <a
+                {{ $task->exp }}✨ | {{ $task->coins }}🪙 @if(count($task->subtasks) > 0) | {{ count($task->completedSubTasks) }}/{{ count($task->subtasks) }}✅ @else @endif @if ($task->due_date != null) | {{ $task->due_date }}🗓️ @else | ❌📅 @endif | <a
                     href="{{ route('tasks.show', ['task' => $task]) }}">View</a><br>
             @endforeach
         @else
@@ -48,6 +48,7 @@
         <br><span>No Recurring Tasks found!</span>
     @endif
     @if (count($todayTasks) > 0 || count($recurringTasks) > 0)
+        <br><br>
         <input type="submit" value="Complete Selected tasks" name="complete-button" id="complete-button">
     @endif
     </form>

@@ -48,6 +48,7 @@
                 No
             @endif
         </li>
+        <li>🗓️: @if ($task->due_date != null){{ $task->due_date }} @else ❌ @endif </li>
     </ul>
     <textarea readonly disabled name="description" id="description" cols="30" rows="10">{{ $task->description }}</textarea>
     <hr>
