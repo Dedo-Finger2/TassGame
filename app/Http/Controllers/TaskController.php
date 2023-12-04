@@ -72,19 +72,30 @@ class TaskController extends Controller
         if (!$this->checkTaskSubtasks($data))
             return redirect()->back()->with('error', "Complete all tasks's subtasks before completing the task itself!");
 
+        if (count($data['tasks']) == 1) {
+            $task = Task::find($data['tasks'][0]);
+                if ($task->overdue == false)
+                    $this->checkDueDate($data['tasks']);
 
+                UserController::earnCoins($task->coins);
+                UserController::earnExp($task->exp);
 
-        foreach ($data['tasks'] as $task_id) {
-            $task = Task::find($task_id);
-            if ($task->overdue == false)
-                $this->checkDueDate($data['tasks']);
+                $task->completed_at = Carbon::now();
 
-            UserController::earnCoins($task->coins);
-            UserController::earnExp($task->exp);
+                $task->save();
+        } else if (count($data['tasks']) > 1) {
+            foreach ($data['tasks'] as $task_id) {
+                $task = Task::find($task_id);
+                if ($task->overdue == false)
+                    $this->checkDueDate($data['tasks']);
 
-            $task->completed_at = Carbon::now();
+                UserController::earnCoins($task->coins);
+                UserController::earnExp($task->exp);
 
-            $task->save();
+                $task->completed_at = Carbon::now();
+
+                $task->save();
+            }
         }
 
         return redirect()->back()->with('success', count($data['tasks']) . "  tasks marked as done!");
@@ -156,9 +167,9 @@ class TaskController extends Controller
     {
         date_default_timezone_set("America/Sao_Paulo");
 
-        $data['tasks'] = $data;
+        // $data['tasks'] = $data;
 
-        foreach ($data['tasks'] as $task) {
+        foreach ($data as $task) {
             $task = Task::where('id', $task)->first();
 
             if ($task->due_date != null && $task->overdue == false) {
@@ -225,7 +236,6 @@ class TaskController extends Controller
             if ($taskCompletedAt->eq($dateNow)) continue;
 
             if ($taskCompletedAt->lessThan($dateNow)) {
-                dd($taskCompletedAt, $dateNow);
                 $task->completed_at = null;
                 $task->save();
                 $refreshedTasks++;
