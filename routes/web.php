@@ -81,6 +81,7 @@ Route::get('/my-tasks', [TaskController::class, 'myTasks'])->name('tasks.my-task
 Route::get('/my-completed-tasks', [TaskController::class, 'myCompletedTasks'])->name('tasks.my-completed-tasks')->middleware('auth');
 Route::post('/complete-my-tasks', [TaskController::class, 'completeTasks'])->name('tasks.complete-tasks')->middleware('auth');
 Route::post('/uncomplete-my-tasks', [TaskController::class, 'uncompleteTasks'])->name('tasks.uncomplete-tasks')->middleware('auth');
+Route::post('/refresh-recurrings', [TaskController::class, 'refreshRecurringTasks'])->name('tasks.refresh-recurring-tasks')->middleware('auth');
 
 // SubTasks
 Route::get('/sub-tasks', [SubTaskController::class, 'index'])->name('sub-tasks.index')->middleware('auth');

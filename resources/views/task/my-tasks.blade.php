@@ -64,9 +64,15 @@
     @endif
     </form>
 
+    <form action="{{ route('tasks.refresh-recurring-tasks') }}" method="POST">
+        @csrf
+        <button type="submit">Refresh Recurrings</button>
+    </form>
 
     <br><br>
 
 
 
 @endsection
+
+{{-- recurringRefreshError --}}

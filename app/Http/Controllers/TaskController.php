@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SubTask;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\SubTask;
 use App\Models\Urgence;
 use App\Models\Difficulty;
 use App\Models\Importance;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -19,7 +20,7 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all();
-        $tasksId = Task::where('overdue', false)->pluck('id');
+        $tasksId = Task::where('overdue', false)->pluck('id')->toArray();
 
         $data['tasks'] = $tasksId;
 
@@ -36,11 +37,12 @@ class TaskController extends Controller
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
 
-        $tasksId = Task::where('overdue', false)->pluck('id');
+        $tasksId = Task::where('overdue', false)->pluck('id')->toArray();
 
         $data['tasks'] = $tasksId;
 
         $this->checkDueDate($data);
+        // $this->refreshRecurringTasks($data);
 
         return view('task.my-tasks', [
             'todayTasks' => $todayTasks,
@@ -150,9 +152,11 @@ class TaskController extends Controller
     }
 
 
-    private function checkDueDate(array $data)
+    private function checkDueDate(array &$data)
     {
         date_default_timezone_set("America/Sao_Paulo");
+
+        $data['tasks'] = $data;
 
         foreach ($data['tasks'] as $task) {
             $task = Task::where('id', $task)->first();
@@ -192,6 +196,46 @@ class TaskController extends Controller
             echo $e->getMessage();
             die();
         }
+    }
+
+
+    public function refreshRecurringTasks()
+    {
+        date_default_timezone_set("America/Sao_Paulo");
+
+        $dateNow = Carbon::now()->setTimezone('America/Sao_Paulo')->startOfDay();
+        $refreshedTasks = 0;
+
+
+        $recurringTasks = Task::where('user_id', auth()->user()->id)
+            ->where('completed_at', '!=', null)
+            ->where('recurring', true)
+            ->get();
+
+        if (count($recurringTasks) == 0) return redirect()->back();
+
+        foreach ($recurringTasks as $task) {
+            if ($task->recurring != true)
+                continue;
+            if ($task->completed_at == null)
+                continue;
+
+            $taskCompletedAt = Carbon::createFromFormat('Y-m-d H:i:s', $task->completed_at)->startOfDay();
+
+            if ($taskCompletedAt->eq($dateNow)) continue;
+
+            if ($taskCompletedAt->lessThan($dateNow)) {
+                dd($taskCompletedAt, $dateNow);
+                $task->completed_at = null;
+                $task->save();
+                $refreshedTasks++;
+            } else {
+                continue;
+            }
+        }
+
+        if ($refreshedTasks == 0) return redirect()->back()->with('error', 'No recurring task avaliable for refresh now. Come back later or tomorrow!');
+        else return redirect()->back()->with('success', "$refreshedTasks recurring tasks were refreshed.");
     }
 
 
