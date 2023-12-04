@@ -163,27 +163,22 @@ class TaskController extends Controller
     }
 
 
-    private function checkDueDate(array &$data)
+    private function checkDueDate(array $data)
     {
         date_default_timezone_set("America/Sao_Paulo");
 
         // $data['tasks'] = $data;
-
-        foreach ($data as $task) {
-            $task = Task::where('id', $task)->first();
+        foreach ($data['tasks'] as $task_id) {
+            $task = Task::where('id', $task_id)->first();
 
             if ($task->due_date != null && $task->overdue == false) {
-
+                // dd("Cheguei");
                 $taskDueDate = Carbon::createFromFormat('Y-m-d', $task->due_date)->startOfDay();
                 $dateNow = Carbon::now()->setTimezone('America/Sao_Paulo')->startOfDay();
 
-                if ($dateNow->eq($taskDueDate) || $taskDueDate->lt($dateNow))
-                    continue;
-                else if ($dateNow->gt($taskDueDate)) {
+                if ($dateNow->gt($taskDueDate)) {
                     $task->overdue = true;
                     $this->applyOverdueDebuff($task);
-
-                    return false;
                 }
             } else
                 continue;
