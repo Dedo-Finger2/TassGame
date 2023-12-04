@@ -19,7 +19,7 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all();
-        $tasksId = Task::whereNull('overdue')->pluck('id');
+        $tasksId = Task::where('overdue', false)->pluck('id');
 
         $data['tasks'] = $tasksId;
 
@@ -36,7 +36,7 @@ class TaskController extends Controller
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
 
-        $tasksId = Task::whereNull('overdue')->pluck('id');
+        $tasksId = Task::where('overdue', false)->pluck('id');
 
         $data['tasks'] = $tasksId;
 
@@ -74,7 +74,7 @@ class TaskController extends Controller
 
         foreach ($data['tasks'] as $task_id) {
             $task = Task::find($task_id);
-            if ($task->overdue == null)
+            if ($task->overdue == false)
                 $this->checkDueDate($data['tasks']);
 
             UserController::earnCoins($task->coins);
@@ -152,18 +152,19 @@ class TaskController extends Controller
 
     private function checkDueDate(array $data)
     {
+        date_default_timezone_set("America/Sao_Paulo");
+
         foreach ($data['tasks'] as $task) {
             $task = Task::where('id', $task)->first();
 
-            if ($task->due_date != null && $task->overdue == null) {
+            if ($task->due_date != null && $task->overdue == false) {
 
+                $taskDueDate = Carbon::createFromFormat('Y-m-d', $task->due_date)->startOfDay();
                 $dateNow = Carbon::now()->setTimezone('America/Sao_Paulo')->startOfDay();
-                $taskDueDate = Carbon::createFromFormat('Y-m-d', $task->due_date);
 
-                if ($dateNow->eq($taskDueDate))
+                if ($dateNow->eq($taskDueDate) || $taskDueDate->lt($dateNow))
                     continue;
-
-                if ($dateNow->gt($taskDueDate)) {
+                else if ($dateNow->gt($taskDueDate)) {
                     $task->overdue = true;
                     $this->applyOverdueDebuff($task);
 
