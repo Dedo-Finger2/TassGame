@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubTaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
@@ -104,3 +105,6 @@ Route::get('/items/{item}', [ItemController::class, 'edit'])->name('items.edit')
 Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update')->middleware('auth');
 Route::get('/items/{item}/view', [ItemController::class, 'show'])->name('items.show')->middleware('auth');
 Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy')->middleware('auth');
+// Shop
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index')->middleware('auth');
+Route::get('/buy/{item}', [ShopController::class, 'buy'])->name('shop.buy')->middleware('auth');

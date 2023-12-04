@@ -25,7 +25,7 @@
     <textarea name="description" disabled id="" cols="30" rows="10">{{ $item->description }}</textarea>
 
     <script>
-                var modal = document.getElementById("modal-deletion");
+        var modal = document.getElementById("modal-deletion");
         var btn = document.getElementById("confirm-delete");
         var btn_close = document.getElementById("close-modal");
 
