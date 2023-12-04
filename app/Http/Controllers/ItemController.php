@@ -12,7 +12,11 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        $items = Item::all();
+
+        return view('item.index', [
+            'items' => $items,
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('item.create');
     }
 
     /**
@@ -28,7 +32,15 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name'        => ['required', 'string', 'unique:items'],
+            'price'       => ['required', 'numeric', 'min:1'],
+            'description' => ['string', 'min:3'],
+        ]);
+
+        Item::create($data);
+
+        return redirect()->route('items.index')->with('success', 'New item added!');
     }
 
     /**
@@ -36,7 +48,9 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        //
+        return view('item.show', [
+            'item' => $item,
+        ]);
     }
 
     /**
@@ -44,7 +58,9 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        //
+        return view('item.edit', [
+            'item' => $item,
+        ]);
     }
 
     /**
@@ -52,7 +68,18 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+        $data = $request->validate([
+            'name'        => ['required', 'string', 'unique:items,name,' . $item->id,],
+            'price'       => ['required', 'numeric', 'min:1'],
+            'description' => ['string', 'min:3'],
+        ]);
+
+        try {
+            $item->update($data);
+            return redirect()->route('items.index')->with('success', 'Item updated!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     /**
@@ -60,6 +87,11 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        try {
+            $item->delete();
+            return redirect()->route('items.index')->with('success', 'Item deleted!');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

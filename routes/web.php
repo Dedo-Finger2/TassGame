@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SubTaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
@@ -94,3 +95,12 @@ Route::delete('/sub-tasks/{sub_task}', [SubTaskController::class, 'destroy'])->n
 
 Route::post('/uncomplete-sub-tasks', [SubTaskController::class, 'uncompleteSubTasks'])->name('sub-tasks.uncomplete')->middleware('auth');
 Route::post('/complete-sub-tasks', [SubTaskController::class, 'completeSubTasks'])->name('sub-tasks.complete')->middleware('auth');
+
+// Items
+Route::get('/items', [ItemController::class, 'index'])->name('items.index')->middleware('auth');
+Route::get('/items-creation', [ItemController::class, 'create'])->name('items.create')->middleware('auth');
+Route::post('/items-creation', [ItemController::class, 'store'])->name('items.store')->middleware('auth');
+Route::get('/items/{item}', [ItemController::class, 'edit'])->name('items.edit')->middleware('auth');
+Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update')->middleware('auth');
+Route::get('/items/{item}/view', [ItemController::class, 'show'])->name('items.show')->middleware('auth');
+Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy')->middleware('auth');
