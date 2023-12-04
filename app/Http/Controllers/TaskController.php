@@ -168,6 +168,9 @@ class TaskController extends Controller
         date_default_timezone_set("America/Sao_Paulo");
 
         // $data['tasks'] = $data;
+
+        if (!isset($data['tasks'])) $data['tasks'] = $data;
+
         foreach ($data['tasks'] as $task_id) {
             $task = Task::where('id', $task_id)->first();
 
@@ -189,6 +192,7 @@ class TaskController extends Controller
 
 
     private function applyOverdueDebuff(Task &$task)
+
     {
         if ($task->overdue == null)
             return false;
