@@ -74,15 +74,16 @@ class TaskController extends Controller
 
         if (count($data['tasks']) == 1) {
             $task = Task::find($data['tasks'][0]);
-                if ($task->overdue == false)
-                    $this->checkDueDate($data['tasks']);
 
-                UserController::earnCoins($task->coins);
-                UserController::earnExp($task->exp);
+            if ($task->overdue == false)
+                $this->checkDueDate($data['tasks']);
 
-                $task->completed_at = Carbon::now();
+            UserController::earnCoins($task->coins);
+            UserController::earnExp($task->exp);
 
-                $task->save();
+            $task->completed_at = Carbon::now();
+
+            $task->save();
         } else if (count($data['tasks']) > 1) {
             foreach ($data['tasks'] as $task_id) {
                 $task = Task::find($task_id);
@@ -169,7 +170,8 @@ class TaskController extends Controller
 
         // $data['tasks'] = $data;
 
-        if (!isset($data['tasks'])) $data['tasks'] = $data;
+        if (!isset($data['tasks']))
+            $data['tasks'] = $data;
 
         foreach ($data['tasks'] as $task_id) {
             $task = Task::where('id', $task_id)->first();
@@ -192,7 +194,6 @@ class TaskController extends Controller
 
 
     private function applyOverdueDebuff(Task &$task)
-
     {
         if ($task->overdue == null)
             return false;
@@ -222,7 +223,8 @@ class TaskController extends Controller
             ->where('recurring', true)
             ->get();
 
-        if (count($recurringTasks) == 0) return redirect()->back();
+        if (count($recurringTasks) == 0)
+            return redirect()->back();
 
         foreach ($recurringTasks as $task) {
             if ($task->recurring != true)
@@ -232,7 +234,8 @@ class TaskController extends Controller
 
             $taskCompletedAt = Carbon::createFromFormat('Y-m-d H:i:s', $task->completed_at)->startOfDay();
 
-            if ($taskCompletedAt->eq($dateNow)) continue;
+            if ($taskCompletedAt->eq($dateNow))
+                continue;
 
             if ($taskCompletedAt->lessThan($dateNow)) {
                 $task->completed_at = null;
@@ -243,8 +246,10 @@ class TaskController extends Controller
             }
         }
 
-        if ($refreshedTasks == 0) return redirect()->back()->with('error', 'No recurring task avaliable for refresh now. Come back later or tomorrow!');
-        else return redirect()->back()->with('success', "$refreshedTasks recurring tasks were refreshed.");
+        if ($refreshedTasks == 0)
+            return redirect()->back()->with('error', 'No recurring task avaliable for refresh now. Come back later or tomorrow!');
+        else
+            return redirect()->back()->with('success', "$refreshedTasks recurring tasks were refreshed.");
     }
 
 
