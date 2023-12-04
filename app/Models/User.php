@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class);
     }
+
+    public function userInventory()
+    {
+        return $this->hasOne(UserInventory::class);
+    }
 }

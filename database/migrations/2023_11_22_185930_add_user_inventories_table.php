@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_inventories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained('items');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('powerup_id')->constrained('powerups');
-            $table->foreignId('upgrade_id')->constrained('upgrades');
+            $table->foreignId('item_id')->nullable(true)->constrained('items');
+            $table->foreignId('user_id')->nullable(false)->constrained('users');
+            $table->foreignId('powerup_id')->nullable(true)->constrained('powerups');
+            $table->foreignId('upgrade_id')->nullable(true)->constrained('upgrades');
             $table->timestamps();
         });
     }
