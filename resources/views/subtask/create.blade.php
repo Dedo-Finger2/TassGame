@@ -26,7 +26,7 @@
         <input type="number" name="coins" id="coins" value="{{ old('coins') }}"> --}}
 
         {{-- <label for="recurring">Recurring</label>
-        @if (old('recurring') == true || old('recurring') === "1")
+        @if (old('recurring') == true || old('recurring') === '1')
             <input type="checkbox" checked name="recurring" id="recurring" value="{{ true }}">
         @else
             <input type="checkbox" name="recurring" id="recurring" value="{{ true }}">
@@ -70,7 +70,11 @@
                 <option>None</option>
             @else
                 @foreach ($tasks as $task)
-                    <option value="{{ $task->id }}">{{ $task->name }}</option>
+                    @if (isset($selectedTask) && $selectedTask->id == $task->id))
+                        <option selected value="{{ $task->id }}">{{ $task->name }}</option>
+                    @else
+                        <option value="{{ $task->id }}">{{ $task->name }}</option>
+                    @endif
                 @endforeach
             @endif
         </select>

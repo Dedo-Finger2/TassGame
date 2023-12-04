@@ -85,7 +85,7 @@ Route::post('/refresh-recurrings', [TaskController::class, 'refreshRecurringTask
 
 // SubTasks
 Route::get('/sub-tasks', [SubTaskController::class, 'index'])->name('sub-tasks.index')->middleware('auth');
-Route::get('/sub-tasks-creation', [SubTaskController::class, 'create'])->name('sub-tasks.create')->middleware('auth');
+Route::get('/sub-tasks-creation/{selectedTask}', [SubTaskController::class, 'create'])->name('sub-tasks.create')->middleware('auth');
 Route::post('/sub-tasks-creation', [SubTaskController::class, 'store'])->name('sub-tasks.store')->middleware('auth');
 Route::get('/sub-tasks/{sub_task}', [SubTaskController::class, 'edit'])->name('sub-tasks.edit')->middleware('auth');
 Route::put('/sub-tasks/{sub_task}', [SubTaskController::class, 'update'])->name('sub-tasks.update')->middleware('auth');

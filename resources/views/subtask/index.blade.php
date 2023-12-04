@@ -3,7 +3,7 @@
 
 @section('content')
     <h1>SubTasks</h1>
-    <a href="{{ route('sub-tasks.create') }}">Create new</a>
+    <a href="{{ route('sub-tasks.create', ['selectedTask' => 0]) }}">Create new</a>
 
     @if (session('success'))
         <div>

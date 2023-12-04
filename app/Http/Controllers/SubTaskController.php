@@ -29,7 +29,7 @@ class SubTaskController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(int|null $selectedTask = 0)
     {
         $users = User::all();
         $urgences = Urgence::all();
@@ -37,12 +37,17 @@ class SubTaskController extends Controller
         $difficulties = Difficulty::all();
         $tasks = Task::all();
 
+        if ($selectedTask && $selectedTask != 0) {
+            $selectedTask = Task::where('id', $selectedTask)->first();
+        }
+
         return view('subtask.create', [
             'users' => $users,
             'urgences' => $urgences,
             'importances' => $importances,
             'difficulties' => $difficulties,
             'tasks' => $tasks,
+            'selectedTask' => $selectedTask,
         ]);
     }
 

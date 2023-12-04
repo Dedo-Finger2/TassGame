@@ -55,6 +55,8 @@
 
     @if (count($subTasks) > 0)
         <h2>Subtasks Related:</h2>
+        <a href="{{ route('sub-tasks.create', ['selectedTask'=>$task->id]) }}">Create a new subtask</a>
+        <hr>
 
         <form action="{{ route('sub-tasks.complete') }}" id="formId" method="POST">
             @csrf
@@ -68,8 +70,9 @@
             @endforeach
             <br>
             <input type="submit" name="complete Subtasks" value="Complete Subtasks" id="complete-Subtasks">
+        </form>
         @else
-            <span>No SubTasks found!</span>
+            <span>No SubTasks found! <a href="{{ route('sub-tasks.create', ['selectedTask'=>$task->id]) }}">Create a new subtask</a></span>
     @endif
 
     @if (count($completedSubTasks) > 0)
@@ -83,10 +86,11 @@
                 <input type="checkbox" value="{{ $subTask->id }}" name="subTasks[]" id="subTask{{ $subTask->id }}">
                 {{ $subTask->name }}
                 | {{ $subTask->completed_at }} | <a
-                    href="{{ route('sub-tasks.show', ['sub-task' => $subTask]) }}">View</a><br>
+                    href="{{ route('sub-tasks.show', ['sub_task' => $subTask]) }}">View</a><br>
             @endforeach
             <br>
             <input type="submit" name="uncomplete Subtasks" value="Uncomplete Subtasks" id="uncomplete-Subtasks">
+        </form>
         @else
             <span><br><br>No completed SubTasks found!</span>
     @endif
