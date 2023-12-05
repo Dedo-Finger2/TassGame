@@ -10,8 +10,9 @@ class Upgrade extends Model
 {
     use HasFactory;
 
-    public function inventory()
+    public function inventories()
     {
-        return $this->belongsTo(UserInventory::class);
+        return $this->belongsToMany(UserInventory::class, 'user_inventory_upgrades');
     }
+
 }

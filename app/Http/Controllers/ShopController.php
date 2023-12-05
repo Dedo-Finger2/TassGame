@@ -26,12 +26,15 @@ class ShopController extends Controller
         $user = User::where('id', auth()->user()->id)->first();
 
         try {
+            $userIventory = new UserInventoryController;
+            $userIventory->addItem($item);
+
             $user->coins -= $item->price;
             $user->save();
 
             return redirect()->back()->with('success', 'New item bought!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Could not buy the item.');
+            return redirect()->back()->with('error', 'Could not buy the item.'.$e->getMessage());
         }
     }
 }

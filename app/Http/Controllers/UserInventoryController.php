@@ -2,64 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserInventory;
+use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Models\UserInventory;
+use App\Models\UserInventoryItem;
 
 class UserInventoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    private function createNewInventory()
     {
-        //
+        $userInventory = UserInventory::where('user_id', auth()->user()->id)->get();
+
+        if (!$userInventory || count($userInventory) <= 0) {
+            $data = [
+                'user_id' => auth()->user()->id,
+            ];
+
+            UserInventory::create($data);
+        }
+
+        return $userInventory;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function addItem(Item|int $item)
     {
-        //
-    }
+        $userInventoryId = $this->createNewInventory()->pluck('id');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $data = [
+            'user_inventory_id' => $userInventoryId[0],
+            'item_id' => $item->id ? $item->id : $item,
+        ];
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserInventory $userInventory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserInventory $userInventory)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserInventory $userInventory)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserInventory $userInventory)
-    {
-        //
+        UserInventoryItem::create($data);
     }
 }

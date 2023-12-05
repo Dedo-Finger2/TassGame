@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserInventory;
+use App\Models\UserInventoryItem;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -12,7 +14,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         return view("user.profile", [
-            "user"=> $user,
+            "user" => $user,
         ]);
     }
 
@@ -23,11 +25,22 @@ class UserController extends Controller
     }
 
 
+    public function inventory()
+    {
+        $userInventory = UserInventory::where('user_id', auth()->user()->id)->first();
+
+        return view('user.inventory', [
+            'userInventory' => $userInventory,
+        ]);
+    }
+
+
     public static function earnCoins(int $amount)
     {
         $user = User::find(auth()->user()->id);
 
-        if ($amount <= 0) return redirect()->back()->with("error","Invalid amount of coins.");
+        if ($amount <= 0)
+            return redirect()->back()->with("error", "Invalid amount of coins.");
 
         $user->coins += $amount;
         $user->save();
@@ -38,7 +51,8 @@ class UserController extends Controller
     {
         $user = User::find(auth()->user()->id);
 
-        if ($amount <= 0) return redirect()->back()->with("error", "Invalid amount of exp.");
+        if ($amount <= 0)
+            return redirect()->back()->with("error", "Invalid amount of exp.");
 
         $user->exp += $amount;
 
@@ -57,11 +71,13 @@ class UserController extends Controller
     {
         $user = User::find(auth()->user()->id);
 
-        if ($amount <= 0) return redirect()->back()->with("error","Invalid amount of coins.");
+        if ($amount <= 0)
+            return redirect()->back()->with("error", "Invalid amount of coins.");
 
         $user->coins -= $amount;
 
-        if ($user->coins < 0) $user->coins = 0;
+        if ($user->coins < 0)
+            $user->coins = 0;
 
         $user->save();
     }

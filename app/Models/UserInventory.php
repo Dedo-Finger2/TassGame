@@ -9,23 +9,27 @@ class UserInventory extends Model
 {
     use HasFactory;
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = [
+        'item_id',
+        'user_id',
+        'powerup_id',
+        'upgrade_id',
+    ];
 
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->belongsToMany(Item::class, 'user_inventory_items');
     }
 
     public function powerups()
     {
-        return $this->hasMany(Powerup::class);
+        return $this->belongsToMany(Powerup::class, 'user_inventory_powerups');
     }
 
     public function upgrades()
     {
-        return $this->hasMany(Upgrade::class);
+        return $this->belongsToMany(Upgrade::class, 'user_inventory_upgrades');
     }
+
+
 }

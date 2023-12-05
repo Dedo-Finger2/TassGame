@@ -3,6 +3,7 @@
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubTaskController;
+use App\Http\Controllers\UserInventoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -38,6 +39,7 @@ Route::get('/', function () {
 })->name('home')->middleware('auth');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
 Route::get('/my-dashboard', [UserController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::get('/my-inventory', [UserController::class, 'inventory'])->name('inventory')->middleware('auth');
 
 
 // Urgences
@@ -108,3 +110,6 @@ Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.
 // Shop
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index')->middleware('auth');
 Route::get('/buy/{item}', [ShopController::class, 'buy'])->name('shop.buy')->middleware('auth');
+
+// Iventory
+Route::post('/inventory-creation', [UserInventoryController::class, 'createNewIventory'])->name('userInventory.store')->middleware('auth');
