@@ -30,6 +30,7 @@ class Task extends Model
         'user_id',
         'due_date',
         'overdue',
+        'completed_before',
     ];
 
     public function urgence()

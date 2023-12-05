@@ -16,11 +16,11 @@
                 <th>Price</th>
                 <th>Options</th>
             </tr>
-            @foreach ($userInventory->items as $item)
+            @foreach ($userInventory->items->groupBy('name') as $name => $itemGroup)
                 <tr>
-                    <td># {{ $item->id }}</td>
-                    <td>{{ $item->name }} </td>
-                    <td>{{ $item->price }}🪙 </td>
+                    <td># {{ $itemGroup->first()->id }}</td>
+                    <td>{{ $name }} x{{ $itemGroup->count() }} </td>
+                    <td>{{ $itemGroup->first()->price }}🪙 </td>
                     <td><a href="#">View</a></td>
                 </tr>
             @endforeach

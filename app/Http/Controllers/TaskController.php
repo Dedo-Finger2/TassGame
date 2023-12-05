@@ -78,10 +78,13 @@ class TaskController extends Controller
             if ($task->overdue == false)
                 $this->checkDueDate($data['tasks']);
 
-            UserController::earnCoins($task->coins);
-            UserController::earnExp($task->exp);
+            if ($task->completed_before == false) {
+                UserController::earnCoins($task->coins);
+                UserController::earnExp($task->exp);
+            }
 
             $task->completed_at = Carbon::now();
+            $task->completed_before = true;
 
             $task->save();
         } else if (count($data['tasks']) > 1) {

@@ -21,15 +21,14 @@ class UserInventoryController extends Controller
             UserInventory::create($data);
         }
 
-        return $userInventory;
+        return $userInventory->pluck('id');
     }
 
     public function addItem(Item|int $item)
     {
-        $userInventoryId = $this->createNewInventory()->pluck('id');
-
+        $userInventoryId = $this->createNewInventory()[0];
         $data = [
-            'user_inventory_id' => $userInventoryId[0],
+            'user_inventory_id' => $userInventoryId,
             'item_id' => $item->id ? $item->id : $item,
         ];
 

@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->float('exp')->nullable(false);
             $table->boolean('recurring')->default(false)->nullable(false);
             $table->dateTime('completed_at')->nullable(true);
+            $table->boolean('completed_before')->nullable(false)->default(false);
             $table->timestamps();
         });
     }
