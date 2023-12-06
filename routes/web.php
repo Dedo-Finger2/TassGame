@@ -110,7 +110,8 @@ Route::get('/items/{item}/view', [ItemController::class, 'show'])->name('items.s
 Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy')->middleware('auth');
 
 // Shop
-Route::get('/shop', [ShopController::class, 'index'])->name('shop.index')->middleware('auth');
+Route::get('/shop-items', [ShopController::class, 'itemShop'])->name('shop.items')->middleware('auth');
+Route::get('/shop-powerups', [ShopController::class, 'powerupShop'])->name('shop.powerups')->middleware('auth');
 Route::get('/buy/{item}', [ShopController::class, 'buy'])->name('shop.buy')->middleware('auth');
 
 // Iventory

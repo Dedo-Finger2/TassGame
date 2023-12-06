@@ -1,8 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Shop')
+@section('title', 'Shop - Items')
 
 @section('content')
-    <h1>Shop</h1>
+    <h1>Shop - Items</h1>
+    <span><a href="{{ route('shop.powerups') }}">Powerup Shop</a></span>
+
     @if (session('success'))
         <div>
             <span>{{ session('success') }}</span>
@@ -15,34 +17,10 @@
         </div>
     @endif
     <hr>
-    {{-- canBuyPowerups --}}
 
     <h2>Can buy items</h2>
     <span><a href="{{ route('items.index') }}">All items</a></span>
-    @if (count($canBuyItems) > 0)
-        @foreach ($canBuyItems as $key => $item)
-            <ul>
-                <li>{{ $item->name }} | {{ $item->price }}🪙 | <button id="buy{{ $key }}">Buy</button>
-                </li>
-            </ul>
-            <dialog id="modal-buy{{ $key }}">
-                <h1>You sure you want to buy {{ $item->name }} for {{ $item->price }}🪙?</h1>
-                <form action="{{ route('shop.buy', ['item' => $item]) }}" method="GET">
-                    @csrf
-                    <button type="submit" id="delete-button">Buy</button>
-                </form>
-                <br>
-                <button id="close-modal{{ $key }}">Close</button>
-            </dialog>
-        @endforeach
-    @else
-        <span>No items you can afford buying now.</span>
-    @endif
-
     <hr>
-
-    <h2>Can buy powerups</h2>
-    <span><a href="{{ route('items.index') }}">All items</a></span>
     @if (count($canBuyItems) > 0)
         @foreach ($canBuyItems as $key => $item)
             <ul>
@@ -53,6 +31,7 @@
                 <h1>You sure you want to buy {{ $item->name }} for {{ $item->price }}🪙?</h1>
                 <form action="{{ route('shop.buy', ['item' => $item]) }}" method="GET">
                     @csrf
+                    <input type="hidden" name="item_type" value="item">
                     <button type="submit" id="delete-button">Buy</button>
                 </form>
                 <br>

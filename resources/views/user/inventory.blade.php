@@ -6,9 +6,7 @@
     <hr>
 
     <h2>Items:</h2>
-    @if (count($userInventory->items) <= 0)
-        <span>You bought no items just yet.</span>
-    @else
+    @if (isset($userInventory->items) && count($userInventory->items) > 0)
         <table>
             <tr>
                 <th>Number</th>
@@ -25,12 +23,12 @@
                 </tr>
             @endforeach
         </table>
+    @else
+        <span>You bought no items just yet.</span>
     @endif
 
     <h2>Powerups:</h2>
-    @if (count($userInventory->powerups) <= 0)
-        <span>You bought no powerups just yet.</span>
-    @else
+    @if (isset($userInventory->powerups) && count($userInventory->powerups) > 0)
         <table>
             <tr>
                 <th>Number</th>
@@ -38,21 +36,21 @@
                 <th>Price</th>
                 <th>Options</th>
             </tr>
-            @foreach ($userInventory->powerups as $powerup)
+            @foreach ($userInventory->powerups->groupBy('name') as $name => $powerupGroup)
                 <tr>
-                    <td># {{ $powerup->id }}</td>
-                    <td>{{ $powerup->name }} </td>
-                    <td>{{ $powerup->price }}🪙 </td>
-                    <td><a href="#">View</a></td>
+                    <td># {{ $powerupGroup->first()->id }}</td>
+                    <td>{{ $name }} x{{ $powerupGroup->count() }} </td>
+                    <td>{{ $powerupGroup->first()->price }}🪙 </td>
+                    <td><a href="{{ route('powerups.show', ['powerup' => $powerupGroup->first()]) }}">View</a></td>
                 </tr>
             @endforeach
         </table>
+    @else
+        <span>You bought no powerups just yet.</span>
     @endif
 
     <h2>Upgrades:</h2>
-    @if (count($userInventory->upgrades) <= 0)
-        <span>You bought no upgrades just yet.</span>
-    @else
+    @if (isset($userInventory->upgrades) && count($userInventory->upgrades) > 0)
         <table>
             <tr>
                 <th>Number</th>
@@ -69,6 +67,8 @@
                 </tr>
             @endforeach
         </table>
+    @else
+        <span>You bought no upgrades just yet.</span>
     @endif
 
 @endsection

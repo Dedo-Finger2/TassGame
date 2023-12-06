@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Powerup;
+use App\Models\UserInventoryPowerup;
 use Illuminate\Http\Request;
 use App\Models\UserInventory;
 use App\Models\UserInventoryItem;
@@ -27,11 +29,24 @@ class UserInventoryController extends Controller
     public function addItem(Item|int $item)
     {
         $userInventoryId = $this->createNewInventory()[0];
+
         $data = [
             'user_inventory_id' => $userInventoryId,
-            'item_id' => $item->id ? $item->id : $item,
+            'item_id' => $item,
         ];
 
         UserInventoryItem::create($data);
+    }
+
+    public function addPowerup(Powerup|int $powerup)
+    {
+        $userInventoryId = $this->createNewInventory()[0];
+
+        $data = [
+            'user_inventory_id' => $userInventoryId,
+            'powerup_id' => $powerup,
+        ];
+
+        UserInventoryPowerup::create($data);
     }
 }

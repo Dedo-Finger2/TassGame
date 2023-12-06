@@ -4,31 +4,57 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Powerup;
+use App\Models\Upgrade;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class ShopController extends Controller
-{
-    public function index()
-    {
+class ShopController extends Controller {
+
+    public function itemShop() {
         $user = User::where('id', auth()->user()->id)->first();
         $canBuyItems = Item::where('price', '<=', $user->coins)->get();
-        $canBuyPowerups = Powerup::where('price', '<=', $user->coins)->get();
 
-        return view('shop', [
-            'canBuyPowerups' => $canBuyPowerups,
+        return view('item.shop', [
             'canBuyItems' => $canBuyItems,
         ]);
     }
 
 
-    public function buy(Item $item)
-    {
+    public function powerupShop() {
         $user = User::where('id', auth()->user()->id)->first();
+        $canBuyPowerups = Powerup::where('price', '<=', $user->coins)->get();
+
+        return view('powerup.shop', [
+            'canBuyPowerups' => $canBuyPowerups,
+        ]);
+    }
+
+
+    public function buy(mixed $item, Request $request) {
+        $user = User::where('id', auth()->user()->id)->first();
+        $userIventory = new UserInventoryController;
+        $itemType = $request->item_type;
 
         try {
-            $userIventory = new UserInventoryController;
-            $userIventory->addItem($item);
+            switch($itemType) {
+                case 'item':
+                    $userIventory->addItem($item);
+                    $item = Item::where('id', $item)->first();
+                break;
+
+                case 'powerup':
+                    $userIventory->addPowerup($item);
+                    $item = Powerup::where('id', $item)->first();
+                break;
+
+                case 'upgrade':
+                    # code...
+                    break;
+
+                default:
+                    return redirect()->back()->with('error', 'Failed to add item.');
+
+            }
 
             $user->coins -= $item->price;
             $user->save();
