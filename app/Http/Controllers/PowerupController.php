@@ -97,12 +97,11 @@ class PowerupController extends Controller {
     }
 
 
-    public function use(Powerup $powerup)
-    {
+    public function use (Powerup $powerup) {
         $userInventoryIds = UserInventory::where('user_id', auth()->user()->id)->first()->toArray();
         $userInventoryId = $userInventoryIds['id'];
 
-        if (count(RemainingPowerup::where('user_inventory_id', $userInventoryId)->get()) < 2) {
+        if(count(RemainingPowerup::where('user_inventory_id', $userInventoryId)->get()) < 2) {
             UserInventoryController::removePowerupFromInventory($powerup, $userInventoryId);
 
             $data = [
@@ -120,14 +119,128 @@ class PowerupController extends Controller {
     }
 
 
-    public static function endPowerup(Powerup|int $powerup)
-    {
-        if ($powerup instanceof Powerup) {
+    public static function endPowerup(Powerup|int $powerup) {
+        if($powerup instanceof Powerup) {
             $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup->id)->first();
             $remainingPowerup->delete();
         } else {
             $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup)->first();
             $remainingPowerup->delete();
+        }
+    }
+
+
+    private static function checkActivePowerups(string $type) {
+        if(!UserInventory::where('user_id', auth()->user()->id)->first())
+            return;
+
+        $userInventoryIds = UserInventory::where('user_id', auth()->user()->id)->first()->toArray();
+        $userInventoryId = $userInventoryIds['id'];
+        $remainingPowerups = RemainingPowerup::where('user_inventory_id', $userInventoryId)
+            ->join('powerups', 'remaining_powerups.powerup_id', '=', 'powerups.id')
+            ->where('powerups.type', $type)
+            ->get()
+            ->toArray();
+
+        if(count($remainingPowerups) > 0) {
+            return $remainingPowerups;
+        }
+    }
+
+
+    public static function applyPowerupBuffCoins() {
+        $coinActivePowerups = self::checkActivePowerups('coins');
+
+        if(isset($coinActivePowerups)) {
+            if(count($coinActivePowerups) > 0) {
+                foreach($coinActivePowerups as $powerup) {
+                    // dd($coinActivePowerups);
+                    # Pegar o powerup do remain table
+                    $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup['powerup_id'])->get();
+                    if(count($remainingPowerup) > 1) {
+                        $powerupMultiplier = 0;
+                        foreach($remainingPowerup as $remainPowerupUnit) {
+                            # Se não tiver uso nenhum então remove ele
+                            if($remainPowerupUnit->remaining_uses <= 0) {
+                                PowerupController::endPowerup($powerup['powerup_id']);
+                                return 1;
+                            }
+                            # Diminuir seu uso em um
+                            $remainPowerupUnit->remaining_uses -= 1;
+                            # Pegar o multiplicador do powerup
+                            $powerupMultiplier += $powerup['multiplier'];
+                            // dd($remainPowerupUnit->remaining_uses);
+                            $remainPowerupUnit->save();
+                            # Retonar o atributo da task com o multiplicador do powerup
+                        }
+
+                        return $powerupMultiplier;
+                    } else {
+                        # Se não tiver uso nenhum então remove ele
+                        $remainingPowerup = $remainingPowerup[0];
+                        if($remainingPowerup->remaining_uses <= 0) {
+                            PowerupController::endPowerup($powerup['powerup_id']);
+                            return 1;
+                        }
+                        # Diminuir seu uso em um
+                        $remainingPowerup->remaining_uses -= 1;
+                        # Pegar o multiplicador do powerup
+                        $powerupMultiplier = $powerup['multiplier'];
+                        // dd($remainingPowerup->remaining_uses);
+                        $remainingPowerup->save();
+                        # Retonar o atributo da task com o multiplicador do powerup
+                        return $powerupMultiplier;
+                    }
+                }
+            }
+        }
+    }
+
+    public static function applyPowerupBuffExp() {
+        $expActivePowerups = self::checkActivePowerups('exp');
+
+        if(isset($expActivePowerups)) {
+            if(count($expActivePowerups) > 0) {
+                foreach($expActivePowerups as $powerup) {
+                    // dd($coinActivePowerups);
+                    # Pegar o powerup do remain table
+                    $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup['powerup_id'])->get();
+                    if(count($remainingPowerup) > 1) {
+                        $powerupMultiplier = 0;
+                        foreach($remainingPowerup as $remainPowerupUnit) {
+                            # Se não tiver uso nenhum então remove ele
+                            if($remainPowerupUnit->remaining_uses <= 0) {
+                                PowerupController::endPowerup($powerup['powerup_id']);
+                                return 1;
+                            }
+                            # Diminuir seu uso em um
+                            $remainPowerupUnit->remaining_uses -= 1;
+                            # Pegar o multiplicador do powerup
+                            $powerupMultiplier += $powerup['multiplier'];
+                            // dd($remainPowerupUnit->remaining_uses);
+                            $remainPowerupUnit->save();
+                            # Retonar o atributo da task com o multiplicador do powerup
+                        }
+
+                        return $powerupMultiplier;
+                    } else {
+                        $remainingPowerup = $remainingPowerup[0];
+                        # Se não tiver uso nenhum então remove ele
+                        if($remainingPowerup->remaining_uses <= 0) {
+                            PowerupController::endPowerup($powerup['powerup_id']);
+                            return 1;
+                        }
+                        # Pegar o multiplicador do powerup
+                        $powerupMultiplier = $powerup['multiplier'];
+                        # Diminuir seu uso em um
+                        // dd($remainingPowerup->remaining_uses);
+                        $remainingPowerup->remaining_uses -= 1;
+                        $remainingPowerup->save();
+                        # Retonar o atributo da task com o multiplicador do powerup
+                        return $powerupMultiplier;
+                    }
+                }
+            }
         }
     }
 }

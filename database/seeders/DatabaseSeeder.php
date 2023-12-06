@@ -19,6 +19,31 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        \App\Models\User::factory()->create([
+            'name' => 'Greg',
+            'email' => 'user@user',
+            'password' => bcrypt('123'),
+            'coins' => 100,
+        ]);
+
+        \App\Models\Powerup::factory()->create([
+            'name' => 'Coin v1',
+            'price' => 1,
+            'type' => 'coins',
+            'uses' => 3,
+            'multiplier' => 2,
+            'description' => 'legal',
+        ]);
+
+        \App\Models\Powerup::factory()->create([
+            'name' => 'Exp v1',
+            'price' => 1,
+            'type' => 'exp',
+            'uses' => 3,
+            'multiplier' => 2,
+            'description' => 'legal',
+        ]);
+
         for ($i = 1; $i < 4; $i++) {
             \App\Models\Urgence::factory()->create([
                 'name' => "Urgence nº$i",
@@ -39,6 +64,20 @@ class DatabaseSeeder extends Seeder
                 'description' => "teste nº$i",
                 'exp' => 15 * ($i / 2),
                 'coins' => 8.43 * ($i / 2),
+            ]);
+        }
+
+        for ($i = 1; $i <= 20; $i++) {
+            \App\Models\Task::factory()->create([
+                'name' => "Task nº$i",
+                'recurring' => false,
+                'description' => "task desc nº$i",
+                'importance_id' => 1,
+                'urgence_id' => 1,
+                'difficulty_id' => 1,
+                'user_id' => 1,
+                'coins' => 10,
+                'exp' => 10,
             ]);
         }
 

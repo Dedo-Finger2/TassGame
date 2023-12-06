@@ -77,13 +77,27 @@ class TaskController extends Controller {
                 $this->checkDueDate($data['tasks']);
 
             if($task->completed_before == false) {
-                $task->coins *= $this->applyPowerupBuff('coins');
-                $task->exp *= $this->applyPowerupBuff('exp');
+                $coinBuff = PowerupController::applyPowerupBuffCoins();
+                $expBuff = PowerupController::applyPowerupBuffExp();
+
+                if($coinBuff !== null) {
+                    $task->coins *= $coinBuff;
+                } else {
+                    $task->coins = $this->setTaskCoins($data['tasks']);
+                }
+
+                if($expBuff !== null) {
+                    $task->exp *= $expBuff;
+                } else {
+                    $task->coins = $this->setTaskExp($data['tasks']);
+                }
+
                 $task->save();
 
                 UserController::earnCoins($task->coins);
                 UserController::earnExp($task->exp);
             }
+
 
             $task->completed_at = Carbon::now();
             $task->completed_before = true;
@@ -131,6 +145,7 @@ class TaskController extends Controller {
 
 
     private function setTaskCoins(array $data) {
+        dd($data);
         $urgenceCoins = Urgence::where('id', $data['urgence_id'])->pluck('coins');
         $importanceCoins = Importance::where('id', $data['importance_id'])->pluck('coins');
         $difficultyCoins = Difficulty::where('id', $data['difficulty_id'])->pluck('coins');
@@ -142,6 +157,7 @@ class TaskController extends Controller {
 
 
     private function setTaskExp(array $data) {
+
         $urgenceExp = Urgence::where('id', $data['urgence_id'])->pluck('exp');
         $importanceExp = Importance::where('id', $data['importance_id'])->pluck('exp');
         $difficultyExp = Difficulty::where('id', $data['difficulty_id'])->pluck('exp');
@@ -165,21 +181,7 @@ class TaskController extends Controller {
     }
 
 
-    private function checkActivePowerups(string $type) {
-        if (!UserInventory::where('user_id', auth()->user()->id)->first()) return;
 
-        $userInventoryIds = UserInventory::where('user_id', auth()->user()->id)->first()->toArray();
-        $userInventoryId = $userInventoryIds['id'];
-        $remainingPowerups = RemainingPowerup::where('user_inventory_id', $userInventoryId)
-            ->join('powerups', 'remaining_powerups.powerup_id', '=', 'powerups.id')
-            ->where('powerups.type', $type)
-            ->get()
-            ->toArray();
-
-        if(count($remainingPowerups) > 0) {
-            return $remainingPowerups;
-        }
-    }
 
 
     private function checkDueDate(array $data) {
@@ -188,6 +190,7 @@ class TaskController extends Controller {
         // $data['tasks'] = $data;
 
         if(!isset($data['tasks']))
+
             $data['tasks'] = $data;
 
         foreach($data['tasks'] as $task_id) {
@@ -226,47 +229,7 @@ class TaskController extends Controller {
     }
 
 
-    private function applyPowerupBuff(string $type) {
-        $coinActivePowerups = $this->checkActivePowerups('coins');
-        $expActivePowerups = $this->checkActivePowerups('exp');
 
-        if (isset($coinActivePowerups)) {
-            if(count($coinActivePowerups) > 0 || $type == 'coins') {
-                foreach($coinActivePowerups as $powerup) {
-                    # Pegar o powerup do remain table
-                    $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup['powerup_id'])->first();
-                    # Se não tiver uso nenhum então remove ele
-                    dd($remainingPowerup->remaining_uses);
-                    if ($remainingPowerup->remaining_uses <= 0) {
-                        dd('oi');
-                        PowerupController::endPowerup($powerup['powerup_id']);
-                    }
-                    # Pegar o multiplicador do powerup
-                    $powerupMultiplier = $powerup['multiplier'];
-                    # Diminuir seu uso em um
-                    $remainingPowerup->remaining_uses -= 1;
-                    $remainingPowerup->save();
-                    # Retonar o atributo da task com o multiplicador do powerup
-                    return $powerupMultiplier;
-                }
-            } else {
-                return 1;
-            }
-        } else {
-            return 1;
-        }
-
-
-        if (isset($expActivePowerups)) {
-            if(count($expActivePowerups) > 0 && $type == 'exp') {
-
-            } else {
-                return 1;
-            }
-        } else {
-            return 1;
-        }
-    }
 
 
     public function refreshRecurringTasks() {
