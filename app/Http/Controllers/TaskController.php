@@ -83,13 +83,13 @@ class TaskController extends Controller {
                 if($coinBuff !== null) {
                     $task->coins *= $coinBuff;
                 } else {
-                    $task->coins = $this->setTaskCoins($data['tasks']);
+                    $task->coins = $this->setTaskCoins($task->toArray());
                 }
 
                 if($expBuff !== null) {
                     $task->exp *= $expBuff;
                 } else {
-                    $task->coins = $this->setTaskExp($data['tasks']);
+                    $task->coins = $this->setTaskExp($task->toArray());
                 }
 
                 $task->save();
@@ -145,7 +145,6 @@ class TaskController extends Controller {
 
 
     private function setTaskCoins(array $data) {
-        dd($data);
         $urgenceCoins = Urgence::where('id', $data['urgence_id'])->pluck('coins');
         $importanceCoins = Importance::where('id', $data['importance_id'])->pluck('coins');
         $difficultyCoins = Difficulty::where('id', $data['difficulty_id'])->pluck('coins');
