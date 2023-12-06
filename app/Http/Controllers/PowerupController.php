@@ -118,4 +118,16 @@ class PowerupController extends Controller {
             return redirect()->back()->with('error', 'Cant use another powerup. Limit of 2 active ones.');
         }
     }
+
+
+    public static function endPowerup(Powerup|int $powerup)
+    {
+        if ($powerup instanceof Powerup) {
+            $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup->id)->first();
+            $remainingPowerup->delete();
+        } else {
+            $remainingPowerup = RemainingPowerup::where('powerup_id', $powerup)->first();
+            $remainingPowerup->delete();
+        }
+    }
 }
