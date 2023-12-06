@@ -15,8 +15,10 @@
         </div>
     @endif
     <hr>
+    {{-- canBuyPowerups --}}
 
     <h2>Can buy items</h2>
+    <span><a href="{{ route('items.index') }}">All items</a></span>
     @if (count($canBuyItems) > 0)
         @foreach ($canBuyItems as $key => $item)
             <ul>
@@ -39,16 +41,29 @@
 
     <hr>
 
-    <h2>All items</h2>
-    @if (count($items) > 0)
-        @foreach ($items as $item)
+    <h2>Can buy powerups</h2>
+    <span><a href="{{ route('items.index') }}">All items</a></span>
+    @if (count($canBuyItems) > 0)
+        @foreach ($canBuyItems as $key => $item)
             <ul>
-                <li>{{ $item->name }} | {{ $item->price }}🪙</li>
+                <li>{{ $item->name }} | {{ $item->price }}🪙 | <button id="buy{{ $key }}">Buy</button>
+                </li>
             </ul>
+            <dialog id="modal-buy{{ $key }}">
+                <h1>You sure you want to buy {{ $item->name }} for {{ $item->price }}🪙?</h1>
+                <form action="{{ route('shop.buy', ['item' => $item]) }}" method="GET">
+                    @csrf
+                    <button type="submit" id="delete-button">Buy</button>
+                </form>
+                <br>
+                <button id="close-modal{{ $key }}">Close</button>
+            </dialog>
         @endforeach
     @else
-        <span>No items found. <a href="{{ route('items.create') }}">Create a new item!</a></span>
+        <span>No items you can afford buying now.</span>
     @endif
+
+    <hr>
 
     <script>
         @foreach ($canBuyItems as $key => $item)

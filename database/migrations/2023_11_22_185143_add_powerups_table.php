@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50)->nullable(false)->unique();
             $table->string('description', 255)->nullable(true);
+            $table->string('type', 255)->nullable(false);
             $table->float('duration')->nullable(false);
             $table->float('multiplier')->nullable(false);
             $table->float('price', 10, 2)->nullable(false);

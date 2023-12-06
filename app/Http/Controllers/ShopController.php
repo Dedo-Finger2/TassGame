@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Powerup;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,11 +12,11 @@ class ShopController extends Controller
     public function index()
     {
         $user = User::where('id', auth()->user()->id)->first();
-        $allItems = Item::all();
         $canBuyItems = Item::where('price', '<=', $user->coins)->get();
+        $canBuyPowerups = Powerup::where('price', '<=', $user->coins)->get();
 
-        return view('item.shop', [
-            'items' => $allItems,
+        return view('shop', [
+            'canBuyPowerups' => $canBuyPowerups,
             'canBuyItems' => $canBuyItems,
         ]);
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PowerupController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\UserInventoryController;
@@ -107,9 +108,19 @@ Route::get('/items/{item}', [ItemController::class, 'edit'])->name('items.edit')
 Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update')->middleware('auth');
 Route::get('/items/{item}/view', [ItemController::class, 'show'])->name('items.show')->middleware('auth');
 Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy')->middleware('auth');
+
 // Shop
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index')->middleware('auth');
 Route::get('/buy/{item}', [ShopController::class, 'buy'])->name('shop.buy')->middleware('auth');
 
 // Iventory
 Route::post('/inventory-creation', [UserInventoryController::class, 'createNewIventory'])->name('userInventory.store')->middleware('auth');
+
+// Items
+Route::get('/powerups', [PowerupController::class, 'index'])->name('powerups.index')->middleware('auth');
+Route::get('/powerups-creation', [PowerupController::class, 'create'])->name('powerups.create')->middleware('auth');
+Route::post('/powerups-creation', [PowerupController::class, 'store'])->name('powerups.store')->middleware('auth');
+Route::get('/powerups/{powerup}', [PowerupController::class, 'edit'])->name('powerups.edit')->middleware('auth');
+Route::put('/powerups/{powerup}', [PowerupController::class, 'update'])->name('powerups.update')->middleware('auth');
+Route::get('/powerups/{powerup}/view', [PowerupController::class, 'show'])->name('powerups.show')->middleware('auth');
+Route::delete('/powerups/{powerup}', [PowerupController::class, 'destroy'])->name('powerups.destroy')->middleware('auth');
