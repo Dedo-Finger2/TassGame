@@ -21,7 +21,7 @@
                     <td># {{ $itemGroup->first()->id }}</td>
                     <td>{{ $name }} x{{ $itemGroup->count() }} </td>
                     <td>{{ $itemGroup->first()->price }}🪙 </td>
-                    <td><a href="#">View</a></td>
+                    <td><a href="{{ route('items.show', ['item' => $itemGroup->first()]) }}">View</a></td>
                 </tr>
             @endforeach
         </table>
