@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Powerup;
+use App\Models\RemainingPowerup;
+use App\Models\UserInventory;
+use App\Models\UserInventoryPowerup;
 use Illuminate\Http\Request;
 
 class PowerupController extends Controller {
@@ -33,7 +36,7 @@ class PowerupController extends Controller {
             'price' => ['required', 'numeric', 'min:1'],
             'description' => ['string', 'min:3'],
             'type' => ['string'],
-            'duration' => ['numeric', 'min:1'],
+            'uses' => ['numeric', 'min:1'],
             'multiplier' => ['numeric', 'min:1.1'],
         ]);
 
@@ -69,7 +72,7 @@ class PowerupController extends Controller {
             'price' => ['required', 'numeric', 'min:1'],
             'description' => ['string', 'min:3'],
             'type' => ['string'],
-            'duration' => ['numeric', 'min:1'],
+            'uses' => ['numeric', 'min:1'],
             'multiplier' => ['numeric', 'min:1.1'],
         ]);
 
@@ -90,6 +93,29 @@ class PowerupController extends Controller {
             return redirect()->route('powerups.index')->with('success', 'Powerup deleted!');
         } catch (\Exception $e) {
             echo $e->getMessage();
+        }
+    }
+
+
+    public function use(Powerup $powerup)
+    {
+        $userInventoryIds = UserInventory::where('user_id', auth()->user()->id)->first()->toArray();
+        $userInventoryId = $userInventoryIds['id'];
+
+        if (count(RemainingPowerup::where('user_inventory_id', $userInventoryId)->get()) < 2) {
+            UserInventoryController::removePowerupFromInventory($powerup, $userInventoryId);
+
+            $data = [
+                'user_inventory_id' => $userInventoryId,
+                'remaining_uses' => $powerup->uses,
+                'powerup_id' => $powerup->id,
+            ];
+
+            RemainingPowerup::create($data);
+
+            return redirect()->back()->with('success', 'Powerup used!');
+        } else {
+            return redirect()->back()->with('error', 'Cant use another powerup. Limit of 2 active ones.');
         }
     }
 }

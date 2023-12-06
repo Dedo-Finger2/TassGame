@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('remaining_powerups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('powerup_id')->constrained('user_inventories');
-            $table->float('remaining_time')->nullable(false);
+            $table->foreignId('user_inventory_id')->nullable(true)->constrained('user_inventories');
+            $table->foreignId('powerup_id')->nullable(true)->constrained('powerups');
+            $table->integer('remaining_uses')->nullable(true);
             $table->timestamps();
         });
     }

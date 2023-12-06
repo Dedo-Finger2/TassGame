@@ -20,7 +20,7 @@ class Powerup extends Model
         'description',
         'price',
         'type',
-        'duration',
+        'uses',
         'multiplier',
         'bought',
         'bought_date',

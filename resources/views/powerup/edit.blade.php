@@ -31,8 +31,8 @@
             <option value="exp">Exp</option>
         </select>
 
-        <label for="duration">Duration</label>
-        <input type="number" name="duration" id="duration" value="{{ $powerup->duration }}">
+        <label for="uses">Uses</label>
+        <input type="number" name="uses" id="uses" value="{{ $powerup->uses }}">
 
         <label for="multiplier">Multiplier</label>
         <input type="number" step="0.1" name="multiplier" id="multiplier" value="{{ $powerup->multiplier }}">

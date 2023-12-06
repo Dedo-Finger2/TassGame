@@ -29,8 +29,8 @@
             <option value="exp">Exp</option>
         </select>
 
-        <label for="duration">Duration</label>
-        <input type="number" name="duration" id="duration" value="{{ old('duration') }}">
+        <label for="uses">Uses</label>
+        <input type="number" name="uses" id="uses" value="{{ old('uses') }}">
 
         <label for="multiplier">Multiplier</label>
         <input type="number" step="0.1" name="multiplier" id="multiplier" value="{{ old('multiplier') }}">

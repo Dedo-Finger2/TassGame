@@ -117,7 +117,7 @@ Route::get('/buy/{item}', [ShopController::class, 'buy'])->name('shop.buy')->mid
 // Iventory
 Route::post('/inventory-creation', [UserInventoryController::class, 'createNewIventory'])->name('userInventory.store')->middleware('auth');
 
-// Items
+// Powerups
 Route::get('/powerups', [PowerupController::class, 'index'])->name('powerups.index')->middleware('auth');
 Route::get('/powerups-creation', [PowerupController::class, 'create'])->name('powerups.create')->middleware('auth');
 Route::post('/powerups-creation', [PowerupController::class, 'store'])->name('powerups.store')->middleware('auth');
@@ -125,3 +125,4 @@ Route::get('/powerups/{powerup}', [PowerupController::class, 'edit'])->name('pow
 Route::put('/powerups/{powerup}', [PowerupController::class, 'update'])->name('powerups.update')->middleware('auth');
 Route::get('/powerups/{powerup}/view', [PowerupController::class, 'show'])->name('powerups.show')->middleware('auth');
 Route::delete('/powerups/{powerup}', [PowerupController::class, 'destroy'])->name('powerups.destroy')->middleware('auth');
+Route::get('/powerups-use/{powerup}', [PowerupController::class, 'use'])->name('powerups.use')->middleware('auth');

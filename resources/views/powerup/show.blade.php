@@ -17,12 +17,23 @@
         <button id="close-modal">Close</button>
     </dialog>
 
+    <label for="details">Details:</label>
     <ul>
         <li>This powerup cost: {{ $powerup->price }}🪙</li>
+        <li>Uses: {{ $powerup->uses }}⌛</li>
+        <li>Multiplier: {{ $powerup->multiplier }}✖️</li>
+        <li>Type: {{ $powerup->type }}</li>
+        @if ($powerup->bought != null)
+            <li>Bought: ✅</li>
+            <li>Bought Date: {{ $powerup->bought_date }}🗓️</li>
+        @else
+            <li>Bought: ❌</li>
+        @endif
         <li>Powerup created at: {{ $powerup->created_at }}</li>
     </ul>
 
-    <textarea name="description" disabled id="" cols="30" rows="10">{{ $powerup->description }}</textarea>
+    <label for="description">Description:</label><br>
+    <textarea name="description" disabled id="description" cols="30" rows="10">{{ $powerup->description }}</textarea>
 
     <script>
         var modal = document.getElementById("modal-deletion");
