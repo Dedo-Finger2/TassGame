@@ -23,6 +23,7 @@ return new class extends Migration
                 ->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('powerup_limit')->default(1)->nullable(false);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -180,9 +180,6 @@ class TaskController extends Controller {
     }
 
 
-
-
-
     private function checkDueDate(array $data) {
         date_default_timezone_set("America/Sao_Paulo");
 
@@ -226,9 +223,6 @@ class TaskController extends Controller {
             die();
         }
     }
-
-
-
 
 
     public function refreshRecurringTasks() {

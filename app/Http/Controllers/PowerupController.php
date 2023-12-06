@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Powerup;
-use App\Models\RemainingPowerup;
-use App\Models\UserInventory;
-use App\Models\UserInventoryPowerup;
 use Illuminate\Http\Request;
+use App\Models\UserInventory;
+use App\Models\RemainingPowerup;
+use App\Models\UserInventoryPowerup;
 
 class PowerupController extends Controller {
     /**
@@ -98,10 +99,11 @@ class PowerupController extends Controller {
 
 
     public function use (Powerup $powerup) {
+        $user = User::where('id', auth()->user()->id)->first();
         $userInventoryIds = UserInventory::where('user_id', auth()->user()->id)->first()->toArray();
         $userInventoryId = $userInventoryIds['id'];
 
-        if(count(RemainingPowerup::where('user_inventory_id', $userInventoryId)->get()) < 2) {
+        if(count(RemainingPowerup::where('user_inventory_id', $userInventoryId)->get()) < $user->powerup_limit) {
             UserInventoryController::removePowerupFromInventory($powerup, $userInventoryId);
 
             $data = [
@@ -114,7 +116,7 @@ class PowerupController extends Controller {
 
             return redirect()->back()->with('success', 'Powerup used!');
         } else {
-            return redirect()->back()->with('error', 'Cant use another powerup. Limit of 2 active ones.');
+            return redirect()->back()->with('error', 'Cant use another powerup. Limit of '. $user->powerup_limit . ' active powerup rechead!');
         }
     }
 
