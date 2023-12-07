@@ -6,9 +6,21 @@
     <button id="confirm-delete">Delete</button> - <a href="{{ route('powerups.edit', ['powerup' => $powerup]) }}">Edit</a>
     <hr>
 
+    @if (session('success'))
+        <div>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
     <dialog id="modal-deletion">
         <h1>You sure you want to delete {{ $powerup->name }}?</h1>
-        <form action="" method="POST">
+        <form action="{{ route('powerups.destroy', ['powerup' => $powerup]) }}" method="POST">
             @csrf
             @method('DELETE')
             <button type="submit" id="delete-button">Delete</button>

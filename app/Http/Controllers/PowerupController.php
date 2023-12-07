@@ -93,7 +93,7 @@ class PowerupController extends Controller {
             $powerup->delete();
             return redirect()->route('powerups.index')->with('success', 'Powerup deleted!');
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            return redirect()->back()->with('error', 'Cant delete this powerup because you have it in your inventory.');
         }
     }
 
