@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_inventory_items', function (Blueprint $table) {
+        Schema::create('user_inventory_upgrades', function (Blueprint $table) {
             $table->foreignId('user_inventory_id')->constrained('user_inventories');
-            $table->foreignId('item_id')->constrained('items');
+            $table->foreignId('upgrade_id')->constrained('upgrades');
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_inventory_items');
+        Schema::dropIfExists('user_inventory_upgrades');
     }
 };
