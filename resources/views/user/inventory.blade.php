@@ -92,5 +92,33 @@
     @else
         <span>You bought no upgrades just yet.</span>
     @endif
+    <hr>
+
+    {{-- Active Powerups --}}
+    <h2>Active Powerups:</h2>
+    @if (isset($activePowerups) && count($activePowerups) > 0)
+        <table>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Uses Left</th>
+                <th>Type</th>
+                <th>Multiplier</th>
+                <th>Options</th>
+            </tr>
+            @foreach ($activePowerups->groupBy('name') as $name => $powerupGroup)
+                <tr>
+                    <td># {{ $powerupGroup->first()->id }}</td>
+                    <td>{{ $name }} x{{ $powerupGroup->count() }} </td>
+                    <td>{{ $powerupGroup->first()->remaining_uses }}⌛ </td>
+                    <td>{{ $powerupGroup->first()->type }} </td>
+                    <td>{{ $powerupGroup->first()->multiplier }}✖️ </td>
+                    <td><a href="{{ route('powerups.show', ['powerup' => $powerupGroup->first()]) }}">View</a>
+                </tr>
+            @endforeach
+        </table>
+    @else
+        <span>You have no powerup active at the moment.</span>
+    @endif
 
 @endsection

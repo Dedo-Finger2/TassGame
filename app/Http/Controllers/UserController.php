@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RemainingPowerup;
 use App\Models\User;
 use App\Models\UserInventory;
 use App\Models\UserInventoryItem;
@@ -28,9 +29,13 @@ class UserController extends Controller
     public function inventory()
     {
         $userInventory = UserInventory::where('user_id', auth()->user()->id)->first();
+        $activePowerups = RemainingPowerup::where('remaining_powerups.user_inventory_id', $userInventory->id)
+            ->join("powerups", "remaining_powerups.powerup_id", "=", "powerups.id")
+            ->get();
 
         return view('user.inventory', [
             'userInventory' => $userInventory,
+            'activePowerups' => $activePowerups,
         ]);
     }
 
