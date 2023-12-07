@@ -29,9 +29,11 @@ class UserController extends Controller
     public function inventory()
     {
         $userInventory = UserInventory::where('user_id', auth()->user()->id)->first();
-        $activePowerups = RemainingPowerup::where('remaining_powerups.user_inventory_id', $userInventory->id)
-            ->join("powerups", "remaining_powerups.powerup_id", "=", "powerups.id")
-            ->get();
+        if ($userInventory) {
+            $activePowerups = RemainingPowerup::where('remaining_powerups.user_inventory_id', $userInventory->id)
+                ->join("powerups", "remaining_powerups.powerup_id", "=", "powerups.id")
+                ->get();
+        } else $activePowerups = null;
 
         return view('user.inventory', [
             'userInventory' => $userInventory,

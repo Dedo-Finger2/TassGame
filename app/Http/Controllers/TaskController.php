@@ -36,6 +36,8 @@ class TaskController extends Controller
 
     public function myTasks()
     {
+        PowerupController::checkActivePowerupsUses();
+        
         $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
@@ -85,19 +87,19 @@ class TaskController extends Controller
                 $coinBuff = PowerupController::applyPowerupBuffCoins();
                 $expBuff = PowerupController::applyPowerupBuffExp();
 
+                // dd([$coinBuff, $expBuff]);
+                // dd($this->setTaskCoins($task->toArray()));
+
                 if ($coinBuff !== null) {
                     $task->coins *= $coinBuff;
-                } else {
-                    $task->coins = $this->setTaskCoins($task->toArray());
                 }
 
                 if ($expBuff !== null) {
                     $task->exp *= $expBuff;
-                } else {
-                    $task->coins = $this->setTaskExp($task->toArray());
                 }
 
                 $task->save();
+                // dd($task->coins); // 20
 
                 UserController::earnCoins($task->coins);
                 UserController::earnExp($task->exp);
@@ -120,14 +122,10 @@ class TaskController extends Controller
 
                 if ($coinBuff !== null) {
                     $task->coins *= $coinBuff;
-                } else {
-                    $task->coins = $this->setTaskCoins($task->toArray());
                 }
 
                 if ($expBuff !== null) {
                     $task->exp *= $expBuff;
-                } else {
-                    $task->coins = $this->setTaskExp($task->toArray());
                 }
 
                 UserController::earnCoins($task->coins);
@@ -173,7 +171,7 @@ class TaskController extends Controller
         $difficultyCoins = Difficulty::where('id', $data['difficulty_id'])->pluck('coins');
 
         $taskSumCoins = $urgenceCoins[0] + $importanceCoins[0] + $difficultyCoins[0];
-
+        dd($taskSumCoins);
         return $taskSumCoins;
     }
 

@@ -150,6 +150,27 @@ class PowerupController extends Controller {
     }
 
 
+    public static function checkActivePowerupsUses()
+    {
+        $remainingCoinPowerups = self::checkActivePowerups('coins');
+        $remainingExpPowerups = self::checkActivePowerups('exp');
+
+        if (isset($remainingCoinPowerups)) {
+            foreach ($remainingCoinPowerups as $powerup) {
+                if ($powerup['remaining_uses'] <= 0) self::endPowerup($powerup['powerup_id']);
+                else continue;
+            }
+        }
+
+        if (isset($remainingExpPowerups)) {
+            foreach ($remainingExpPowerups as $powerup) {
+                if ($powerup['remaining_uses'] <= 0) self::endPowerup($powerup['powerup_id']);
+                else continue;
+            }
+        }
+    }
+
+
     public static function applyPowerupBuffCoins() {
         $coinActivePowerups = self::checkActivePowerups('coins');
 
