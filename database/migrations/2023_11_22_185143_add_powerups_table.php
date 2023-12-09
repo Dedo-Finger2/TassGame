@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('bought')->nullable(true);
             $table->dateTime('bought_date')->nullable(true);
             $table->float('price', 10, 2)->nullable(false);
+            $table->string('image')->nullable(true);
             $table->timestamps();
         });
     }

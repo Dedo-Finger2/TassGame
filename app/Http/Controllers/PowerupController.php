@@ -33,6 +33,7 @@ class PowerupController extends Controller {
      */
     public function store(Request $request) {
         $data = $request->validate([
+            'image' => ['nullable', 'image', 'max:2048', 'mimes:png,jpg,jpeg'],
             'name' => ['required', 'string', 'unique:powerups'],
             'price' => ['required', 'numeric', 'min:1'],
             'description' => ['string', 'min:3'],

@@ -24,6 +24,7 @@ class Powerup extends Model
         'multiplier',
         'bought',
         'bought_date',
+        'image',
     ];
 
     public function inventories()
