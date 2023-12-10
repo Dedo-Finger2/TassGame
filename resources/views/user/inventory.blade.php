@@ -30,7 +30,7 @@
             @foreach ($userInventory->items->groupBy('name') as $name => $itemGroup)
                 <tr>
                     <td># {{ $itemGroup->first()->id }}</td>
-                    <td>{{ $name }} x{{ $itemGroup->count() }} </td>
+                    <td>{{ $name }} <strong>x{{ $itemGroup->count() }}</strong> </td>
                     <td>{{ $itemGroup->first()->price }}🪙 </td>
                     <td><a href="{{ route('items.show', ['item' => $itemGroup->first()]) }}">View</a></td>
                 </tr>
@@ -56,7 +56,7 @@
             @foreach ($userInventory->powerups->groupBy('name') as $name => $powerupGroup)
                 <tr>
                     <td># {{ $powerupGroup->first()->id }}</td>
-                    <td>{{ $name }} x{{ $powerupGroup->count() }} </td>
+                    <td>{{ $name }} <strong>x{{ $powerupGroup->count() }}</strong> </td>
                     <td>{{ $powerupGroup->first()->price }}🪙 </td>
                     <td>{{ $powerupGroup->first()->uses }}⌛ </td>
                     <td>{{ $powerupGroup->first()->type }} </td>
@@ -76,16 +76,22 @@
         <table>
             <tr>
                 <th>Number</th>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Price</th>
+                <th>Level Req.</th>
+                <th>Multiplier</th>
                 <th>Options</th>
             </tr>
-            @foreach ($userInventory->upgrades as $upgrade)
+            @foreach ($userInventory->upgrades->groupBy('name') as $name => $upgradeGroup)
                 <tr>
-                    <td># {{ $upgrade->id }}</td>
-                    <td>{{ $upgrade->name }} </td>
-                    <td>{{ $upgrade->price }}🪙 </td>
-                    <td><a href="#">View</a></td>
+                    <td># {{ $upgradeGroup->first()->id }}</td>
+                    <td><img src="img/upgrades/{{ $upgradeGroup->first()->image }}" alt="image" style="width: 50px"></td>
+                    <td>{{ $name }} <strong>x{{ $upgradeGroup->count() }}</strong></td>
+                    <td>{{ $upgradeGroup->first()->price }}🪙 </td>
+                    <td>{{ $upgradeGroup->first()->level }}🌳 </td>
+                    <td>{{ $upgradeGroup->first()->multiplier }}✖️ </td>
+                    <td><a href="{{ route('upgrades.show', ['upgrade' => $upgradeGroup->first()]) }}">View</a>
                 </tr>
             @endforeach
         </table>

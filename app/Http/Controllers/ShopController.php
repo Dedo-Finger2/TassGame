@@ -65,8 +65,13 @@ class ShopController extends Controller
                     break;
 
                 case 'upgrade':
-                    $userIventory->addUpgrade($item);
+                    $success = $userIventory->addUpgrade($item);
                     $item = Upgrade::where('id', $item)->first();
+
+                    if (!$success) {
+                        return redirect()->back()->with('error','Cannot buy another of this upgrade, you reach the buy limit. ('.$item->buy_limit.')');
+                    }
+
                     break;
 
                 default:
@@ -79,7 +84,7 @@ class ShopController extends Controller
 
             return redirect()->back()->with('success', 'New item bought!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Could not buy the item.' . $e->getMessage());
+            return redirect()->back()->with('error', 'Could not buy the item.' . $e->getMessage() . " line: " .$e->getLine() . " file: " . $e->getFile());
         }
     }
 }

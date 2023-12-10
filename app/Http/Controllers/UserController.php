@@ -29,6 +29,7 @@ class UserController extends Controller
     public function inventory()
     {
         $userInventory = UserInventory::where('user_id', auth()->user()->id)->first();
+
         if ($userInventory) {
             $activePowerups = RemainingPowerup::where('remaining_powerups.user_inventory_id', $userInventory->id)
                 ->join("powerups", "remaining_powerups.powerup_id", "=", "powerups.id")

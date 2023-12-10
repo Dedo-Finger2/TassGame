@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Powerup;
 use App\Models\Upgrade;
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\UserInventory;
 use App\Models\UserInventoryItem;
@@ -72,10 +73,20 @@ class UserInventoryController extends Controller
 
         $upgrade = Upgrade::where('id', $upgrade)->first();
 
+        $upgradesUserGot = UserInventoryUpgrade::where('upgrade_id', $upgrade->id)->get();
+
+        if (count($upgradesUserGot) >= $upgrade->buy_limit) {
+            $upgrade->can_buy = false;
+            $upgrade->save();
+            return false;
+        }
+
         $upgrade->price *= $upgrade->price_multiplier_per_buy;
         $upgrade->save();
 
         UserInventoryUpgrade::create($data);
+
+        return true;
     }
 
 

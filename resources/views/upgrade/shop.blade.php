@@ -23,7 +23,12 @@
     @if (count($canBuyUpgrades) > 0)
         @foreach ($canBuyUpgrades as $key => $upgrade)
             <ul>
-                <li>{{ $upgrade->name }} | {{ $upgrade->price }}🪙 | <button id="buy{{ $key }}">Buy</button>
+                <li>{{ $upgrade->name }} | {{ $upgrade->price }}🪙 |
+                    @if ($upgrade->can_buy == false)
+                        <button disabled id="buy{{ $key }}">Buy</button> | [MAXED]
+                    @else
+                        <button id="buy{{ $key }}">Buy</button>
+                    @endif
                 </li>
             </ul>
             <dialog id="modal-buy{{ $key }}">
