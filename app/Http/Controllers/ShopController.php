@@ -8,9 +8,11 @@ use App\Models\Upgrade;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class ShopController extends Controller {
+class ShopController extends Controller
+{
 
-    public function itemShop() {
+    public function itemShop()
+    {
         $user = User::where('id', auth()->user()->id)->first();
         $canBuyItems = Item::where('price', '<=', $user->coins)->get();
 
@@ -20,7 +22,8 @@ class ShopController extends Controller {
     }
 
 
-    public function powerupShop() {
+    public function powerupShop()
+    {
         $user = User::where('id', auth()->user()->id)->first();
         $canBuyPowerups = Powerup::where('price', '<=', $user->coins)->get();
 
@@ -30,25 +33,40 @@ class ShopController extends Controller {
     }
 
 
-    public function buy(mixed $item, Request $request) {
+    public function upgradeShop()
+    {
+        $user = User::where('id', auth()->user()->id)->first();
+        $canBuyUpgrades = Upgrade::where('price', '<=', $user->coins)
+            ->where('level', '<=', $user->level)
+            ->get();
+
+        return view('upgrade.shop', [
+            'canBuyUpgrades' => $canBuyUpgrades,
+        ]);
+    }
+
+
+    public function buy(mixed $item, Request $request)
+    {
         $user = User::where('id', auth()->user()->id)->first();
         $userIventory = new UserInventoryController;
         $itemType = $request->item_type;
 
         try {
-            switch($itemType) {
+            switch ($itemType) {
                 case 'item':
                     $userIventory->addItem($item);
                     $item = Item::where('id', $item)->first();
-                break;
+                    break;
 
                 case 'powerup':
                     $userIventory->addPowerup($item);
                     $item = Powerup::where('id', $item)->first();
-                break;
+                    break;
 
                 case 'upgrade':
-                    # code...
+                    $userIventory->addUpgrade($item);
+                    $item = Upgrade::where('id', $item)->first();
                     break;
 
                 default:
@@ -61,7 +79,7 @@ class ShopController extends Controller {
 
             return redirect()->back()->with('success', 'New item bought!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Could not buy the item.'.$e->getMessage());
+            return redirect()->back()->with('error', 'Could not buy the item.' . $e->getMessage());
         }
     }
 }

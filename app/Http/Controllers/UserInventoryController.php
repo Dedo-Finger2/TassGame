@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Powerup;
+use App\Models\Upgrade;
 use Illuminate\Http\Request;
 use App\Models\UserInventory;
 use App\Models\UserInventoryItem;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserInventoryPowerup;
+use App\Models\UserInventoryUpgrade;
 
 class UserInventoryController extends Controller
 {
@@ -55,6 +57,25 @@ class UserInventoryController extends Controller
         $powerup->save();
 
         UserInventoryPowerup::create($data);
+    }
+
+
+    public function addUpgrade(Upgrade|int $upgrade)
+    {
+        $userInventoryId = $this->createNewInventory()[0];
+        // dd($userInventoryId);
+
+        $data = [
+            'user_inventory_id' => $userInventoryId,
+            'upgrade_id' => $upgrade,
+        ];
+
+        $upgrade = Upgrade::where('id', $upgrade)->first();
+
+        $upgrade->price *= $upgrade->price_multiplier_per_buy;
+        $upgrade->save();
+
+        UserInventoryUpgrade::create($data);
     }
 
 

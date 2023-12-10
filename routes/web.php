@@ -4,6 +4,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PowerupController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubTaskController;
+use App\Http\Controllers\UpgradeController;
 use App\Http\Controllers\UserInventoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
@@ -112,6 +113,7 @@ Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.
 // Shop
 Route::get('/shop-items', [ShopController::class, 'itemShop'])->name('shop.items')->middleware('auth');
 Route::get('/shop-powerups', [ShopController::class, 'powerupShop'])->name('shop.powerups')->middleware('auth');
+Route::get('/shop-upgrades', [ShopController::class, 'upgradeShop'])->name('shop.upgrades')->middleware('auth');
 Route::get('/buy/{item}', [ShopController::class, 'buy'])->name('shop.buy')->middleware('auth');
 
 // Iventory
@@ -126,3 +128,12 @@ Route::put('/powerups/{powerup}', [PowerupController::class, 'update'])->name('p
 Route::get('/powerups/{powerup}/view', [PowerupController::class, 'show'])->name('powerups.show')->middleware('auth');
 Route::delete('/powerups/{powerup}', [PowerupController::class, 'destroy'])->name('powerups.destroy')->middleware('auth');
 Route::get('/powerups-use/{powerup}', [PowerupController::class, 'use'])->name('powerups.use')->middleware('auth');
+
+// Upgrades
+Route::get('/upgrades', [UpgradeController::class, 'index'])->name('upgrades.index')->middleware('auth');
+Route::get('/upgrades-creation', [UpgradeController::class, 'create'])->name('upgrades.create')->middleware('auth');
+Route::post('/upgrades-creation', [UpgradeController::class, 'store'])->name('upgrades.store')->middleware('auth');
+Route::get('/upgrades/{upgrade}', [UpgradeController::class, 'edit'])->name('upgrades.edit')->middleware('auth');
+Route::put('/upgrades/{upgrade}', [UpgradeController::class, 'update'])->name('upgrades.update')->middleware('auth');
+Route::get('/upgrades/{upgrade}/view', [UpgradeController::class, 'show'])->name('upgrades.show')->middleware('auth');
+Route::delete('/upgrades/{upgrade}', [UpgradeController::class, 'destroy'])->name('upgrades.destroy')->middleware('auth');

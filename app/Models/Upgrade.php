@@ -20,9 +20,10 @@ class Upgrade extends Model
         'description',
         'price',
         'level',
-        'limit',
+        'buy_limit',
         'image',
         'price_multiplier_per_buy',
+        'multiplier',
     ];
 
     public function inventories()
