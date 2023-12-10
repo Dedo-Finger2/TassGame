@@ -34,7 +34,8 @@ class UserController extends Controller
             $activePowerups = RemainingPowerup::where('remaining_powerups.user_inventory_id', $userInventory->id)
                 ->join("powerups", "remaining_powerups.powerup_id", "=", "powerups.id")
                 ->get();
-        } else $activePowerups = null;
+        } else
+            $activePowerups = null;
 
         return view('user.inventory', [
             'userInventory' => $userInventory,
@@ -50,8 +51,14 @@ class UserController extends Controller
         if ($amount <= 0)
             return redirect()->back()->with("error", "Invalid amount of coins.");
 
+
+
         $user->coins += $amount;
+
+        if ($user->coins > $user->coin_limit) $user->coins = $user->coin_limit;
+
         $user->save();
+
     }
 
 

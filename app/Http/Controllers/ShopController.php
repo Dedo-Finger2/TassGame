@@ -57,11 +57,19 @@ class ShopController extends Controller
                 case 'item':
                     $userIventory->addItem($item);
                     $item = Item::where('id', $item)->first();
+
+                    $user->coins -= $item->price;
+                    $user->save();
+
                     break;
 
                 case 'powerup':
                     $userIventory->addPowerup($item);
                     $item = Powerup::where('id', $item)->first();
+
+                    $user->coins -= $item->price;
+                    $user->save();
+
                     break;
 
                 case 'upgrade':
@@ -72,15 +80,18 @@ class ShopController extends Controller
                         return redirect()->back()->with('error','Cannot buy another of this upgrade, you reach the buy limit. ('.$item->buy_limit.')');
                     }
 
+                    $user->coins -= $item->price;
+                    $user->save();
+
+                    $item->price *= $item->price_multiplier_per_buy;
+                    $item->save();
+
                     break;
 
                 default:
                     return redirect()->back()->with('error', 'Failed to add item.');
 
             }
-
-            $user->coins -= $item->price;
-            $user->save();
 
             return redirect()->back()->with('success', 'New item bought!');
         } catch (\Exception $e) {

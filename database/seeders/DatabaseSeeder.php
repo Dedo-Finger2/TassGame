@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Greg',
             'email' => 'user@user',
             'password' => bcrypt('123'),
-            'coins' => 100,
+            'coins' => 2,
         ]);
 
         \App\Models\Powerup::factory()->create([
@@ -41,6 +41,29 @@ class DatabaseSeeder extends Seeder
             'type' => 'exp',
             'uses' => 3,
             'multiplier' => 2,
+            'description' => 'legal',
+        ]);
+
+        // ? [UPGRADES] ? \\
+        \App\Models\Upgrade::factory()->create([
+            'name' => 'Better Coin Bag',
+            'price' => 15,
+            'level' => 1,
+            'buy_limit' => 3,
+            'price_multiplier_per_buy' => 2.5,
+            'multiplier' => 1.2,
+            'action_value' => 25,
+            'description' => 'legal',
+        ]);
+
+        \App\Models\Upgrade::factory()->create([
+            'name' => 'Better Powerup Bag',
+            'price' => 30,
+            'level' => 2,
+            'buy_limit' => 5,
+            'price_multiplier_per_buy' => 3.5,
+            'multiplier' => 1,
+            'action_value' => 1,
             'description' => 'legal',
         ]);
 

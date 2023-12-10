@@ -81,10 +81,9 @@ class UserInventoryController extends Controller
             return false;
         }
 
-        $upgrade->price *= $upgrade->price_multiplier_per_buy;
-        $upgrade->save();
-
         UserInventoryUpgrade::create($data);
+
+        UpgradeController::applyUpgrade($upgrade);
 
         return true;
     }

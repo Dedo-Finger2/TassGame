@@ -11,7 +11,7 @@
     <h2>Status:</h2>
     <ul>
         <li>Level: {{ $user->level }}🌳</li>
-        <li>Coins: {{ $user->coins }}🪙</li>
+        <li>Coins: {{ $user->coins }}/{{ $user->coin_limit }}🪙</li>
         <li>Exp: {{ $user->exp }}/{{ $user->exp_next_level }}✨</li>
         <li>Joined at: {{ $user->created_at }}🗓️</li>
     </ul>

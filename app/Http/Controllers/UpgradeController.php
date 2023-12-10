@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Powerup;
 use App\Models\Upgrade;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\UserInventory;
 use App\Models\UserInventoryUpgrade;
@@ -45,6 +47,7 @@ class UpgradeController extends Controller
             'level' => ['required', 'min:1'],
             'multiplier' => ['numeric', 'min:1.1'],
             'price_multiplier_per_buy' => ['required', 'min:1.1'],
+            'action_value' => ['required', 'min:1'],
         ]);
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -146,4 +149,51 @@ class UpgradeController extends Controller
             return redirect()->back()->with('error', 'Cant delete this upgrade because you have it in your inventory.');
         }
     }
+
+
+    public static function applyUpgrade(Upgrade|string $upgrade)
+    {
+        switch ($upgrade->name) {
+            case 'Better Powerup Bag':
+                self::betterPowerupBag($upgrade);
+                break;
+            case 'Better Coin Bag':
+                self::betterCoinBag($upgrade);
+                break;
+
+            default:
+                # code...
+                break;
+        }
+    }
+
+
+    private static function upgradeUpdateValues(Upgrade $upgrade)
+    {
+        $upgrade->action_value *= $upgrade->multiplier;
+        $upgrade->multiplier += 0.1;
+
+        $upgrade->save();
+    }
+
+
+    // * Upgrades
+    private static function betterPowerupBag(Upgrade $upgrade)
+    {
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->powerup_limit += $upgrade->action_value;
+        $user->save();
+
+        self::upgradeUpdateValues($upgrade);
+    }
+
+    private static function betterCoinBag(Upgrade $upgrade)
+    {
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->coin_limit += $upgrade->action_value;
+        $user->save();
+
+        self::upgradeUpdateValues($upgrade);
+    }
+
 }

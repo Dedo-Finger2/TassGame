@@ -24,6 +24,7 @@ class Upgrade extends Model
         'image',
         'price_multiplier_per_buy',
         'multiplier',
+        'action_value',
         'can_buy',
     ];
 

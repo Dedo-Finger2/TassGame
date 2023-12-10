@@ -37,7 +37,7 @@ class TaskController extends Controller
     public function myTasks()
     {
         PowerupController::checkActivePowerupsUses();
-        
+
         $todayTasks = Task::where('recurring', false)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $recurringTasks = Task::where('recurring', true)->where('user_id', auth()->user()->id)->where('completed_at', null)->get();
         $completedTasks = Task::where('user_id', auth()->user()->id)->where('completed_at', "!=", null)->get();
@@ -67,6 +67,8 @@ class TaskController extends Controller
 
     public function completeTasks(Request $request)
     {
+        $user = User::where('id', auth()->user()->id)->first();
+
         $data = $request->validate([
             'tasks' => ['array']
         ]);
@@ -100,9 +102,10 @@ class TaskController extends Controller
 
                 $task->save();
                 // dd($task->coins); // 20
-
                 UserController::earnCoins($task->coins);
                 UserController::earnExp($task->exp);
+
+       
             }
 
 

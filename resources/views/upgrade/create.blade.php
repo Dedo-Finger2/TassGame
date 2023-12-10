@@ -28,6 +28,9 @@
         <label for="level">Level</label>
         <input type="number" name="level" id="level" value="{{ old('level') }}">
 
+        <label for="action_value">Action Value</label>
+        <input type="number" name="action_value" id="action_value" value="{{ old('action_value') }}">
+
         <label for="multiplier">Multiplier</label>
         <input type="number" step="0.1" name="multiplier" id="multiplier" value="{{ old('multiplier') }}">
 
