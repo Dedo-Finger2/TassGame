@@ -24,6 +24,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('powerup_limit')->default(1)->nullable(false);
+            $table->integer('coin_limit')->default(50)->nullable(false);
+            $table->integer('active_powerup_limit')->default(1)->nullable(false);
+            $table->integer('rebirth')->default(0)->nullable(false);
             $table->rememberToken();
             $table->timestamps();
         });

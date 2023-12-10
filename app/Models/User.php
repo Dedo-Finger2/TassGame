@@ -22,6 +22,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'level',
+        'exp',
+        'exp_next_level',
+        'coins',
+        'powerup_limit',
+        'coin_limit',
+        'active_powerup_limit',
+        'rebirth',
     ];
 
     /**
