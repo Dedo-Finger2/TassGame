@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Powerup;
-use App\Models\RemainingPowerup;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\SubTask;
 use App\Models\Urgence;
 use App\Models\Difficulty;
 use App\Models\Importance;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Models\UserInventory;
 use Illuminate\Support\Carbon;
 
 class TaskController extends Controller
